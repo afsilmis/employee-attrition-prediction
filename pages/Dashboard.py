@@ -48,7 +48,7 @@ st.markdown("""
 # Load data
 @st.cache_data
 def load_data():
-    df = pd.read_csv(r'data\raw\attrition.csv')
+    df = pd.read_csv(r'data/raw/attrition.csv')
     return df
 
 try:

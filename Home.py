@@ -4,39 +4,45 @@ from datetime import datetime
 
 st.set_page_config(page_title="Welcome - 3Sigma Squad", layout="wide")
 
+# Load Font Awesome
+st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+    .section-header {
+        background: #f8f9fa;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        border-left: 4px solid #667eea;
+        margin: 1rem 0;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
 # Header Section
-st.title("Welcome to 3Sigma Squad 👋")
+st.markdown("""
+<div>
+    <h1 style="color: black; margin: 0; text-align: center;">Welcome to 3Sigma Squad</h1>
+</div>
+""", unsafe_allow_html=True)
 st.markdown("---")
 
 # Hero Section
-col1, col2 = st.columns([2, 1])
+st.markdown('<div class="section-header"><h3>Advanced Analytics & Prediction Platform</h3></div>', unsafe_allow_html=True)
+st.markdown("""
+Welcome to the advanced analytics platform from 3Sigma Squad. Gain deep insights and accurate predictions to support your business decision-making.
 
-with col1:
-    st.markdown("""
-    ### Advanced Analytics & Prediction Platform
-    
-    Selamat datang di platform analitik canggih dari **3Sigma Squad**. 
-    Dapatkan insights mendalam dan prediksi akurat untuk mendukung pengambilan keputusan bisnis Anda.
-    
-    **Fitur Utama:**
-    - 📊 **Dashboard Interaktif** - Visualisasi data real-time
-    - 🔮 **Prediction Engine** - Model prediksi berbasis AI
-    - 📈 **Advanced Analytics** - Analisis mendalam dengan berbagai metrik
-    - 🎯 **Akurasi Tinggi** - Model yang telah dioptimasi untuk performa terbaik
-    """)
-
-with col2:
-    st.info("""
-    **Quick Navigation**
-    
-    Gunakan sidebar di kiri untuk:
-    - 📊 **Dashboard** - Lihat overview data
-    - 🔮 **Prediction** - Buat prediksi baru
-    """)
+**Key Features:**<br>
+- **Interactive Dashboard** — Real-time data visualizations<br>
+- **Prediction Engine** — Machine learning predictive models <br>
+- **High Accuracy** — Optimized models for best performance
+""", unsafe_allow_html=True)
 
 # Statistics Section
 st.markdown("---")
-st.subheader("📈 Platform Statistics")
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -70,7 +76,7 @@ with col4:
 
 # Recent Activity Section
 st.markdown("---")
-st.subheader("🕒 Recent Activity")
+st.markdown('<div class="section-header"><h3>Recent Activity</h3></div>', unsafe_allow_html=True)
 
 # Sample data - replace with your actual data
 recent_data = pd.DataFrame({
@@ -88,21 +94,17 @@ st.dataframe(recent_data, use_container_width=True)
 
 # Quick Actions
 st.markdown("---")
-st.subheader("🚀 Quick Actions")
+st.markdown('<div class="section-header"><h3>Quick Actions</h3></div>', unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns(3)
+col1, col2 = st.columns(2)
 
 with col1:
-    if st.button("📊 Open Dashboard", use_container_width=True):
+    if st.button("Open Dashboard", use_container_width=True):
         st.switch_page("pages/dashboard.py")  # Adjust path as needed
 
 with col2:
-    if st.button("🔮 Make Prediction", use_container_width=True):
+    if st.button("Make Prediction", use_container_width=True):
         st.switch_page("pages/prediction.py")  # Adjust path as needed
-
-with col3:
-    if st.button("📈 View Analytics", use_container_width=True):
-        st.info("Feature coming soon!")
 
 # Footer
 st.markdown("---")

@@ -17,8 +17,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-import streamlit as st
-
 # Load Font Awesome
 st.markdown("""
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -127,11 +125,11 @@ st.markdown("""
 
     .stButton > button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        color: white !important;
         border: none;
         border-radius: 15px;
         padding: 1rem 3rem;
-        font-weight: 600;
+        font-weight: bold;
         width: 100%;
         transition: all 0.3s ease;
         font-size: 1.2rem;
@@ -279,6 +277,7 @@ def load_models():
 
 model, transformer, ordinal_encoder = load_models()
 
+
 # ========================
 # Data Configuration
 # ========================
@@ -361,7 +360,7 @@ st.markdown('<h1 class="main-header">HR Analytics & Resignation Prediction</h1>'
 if not all([model, transformer, ordinal_encoder]):
     st.markdown("""
     <div class="prediction-card-high">
-        <h2>⚠️ Model Loading Error</h2>
+        <h3>⚠️ Model Loading Error</h3>
         <p>Terjadi kesalahan saat memuat model. Silakan periksa file model di folder 'models/'</p>
         <p>File yang dibutuhkan:</p>
         <ul>
@@ -376,9 +375,9 @@ if not all([model, transformer, ordinal_encoder]):
 # Input form section
 st.markdown("""
     <div class="prediction-container">
-        <h2 class="results-header">
+        <h3 class="results-header">
             Employee Information
-        </h2>
+        </h3>
     </div>
     """, unsafe_allow_html=True)
 
@@ -488,8 +487,7 @@ with col2:
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Add some space at the bottom
-st.markdown("<br><br>", unsafe_allow_html=True)
-
+st.markdown('<hr class="divider-custom">', unsafe_allow_html=True)
 
 # Enhanced Prediction Results Section
 # Add this CSS for additional styling
@@ -645,7 +643,15 @@ st.markdown("""
     align-items: center;
     gap: 0.5rem;
 }
-
+.recommendation-subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}           
 .recommendation-content {
     color: #4a5568;
     line-height: 1.7;
@@ -717,11 +723,11 @@ if not predict_button:
     <div style="text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%); 
                 border-radius: 25px; margin: 3rem 0; border: 1px solid rgba(102,126,234,0.2);">
         <h3 style="color: #667eea; margin-bottom: 1.5rem; font-weight: 700; font-size: 2rem;">
-            AI-Powered HR Analytics Ready
+            HR Analytics System for Resignation Risk Prediction
         </h3>
         <p style="color: #64748b; font-size: 1.2rem; line-height: 1.8; max-width: 700px; margin: 0 auto;">
             Complete the employee information form above and click <strong>Predict Resignation Risk</strong> 
-            to receive comprehensive AI analysis with actionable insights and strategic recommendations.
+            to receive comprehensive analysis with actionable insights and strategic recommendations.
         </p>
         <div style="margin-top: 2rem; padding: 1rem; background: rgba(102,126,234,0.05); 
                     border-radius: 15px; border: 1px solid rgba(102,126,234,0.1);">
@@ -734,7 +740,7 @@ if not predict_button:
 
 else:
     # Process prediction with enhanced loading
-    with st.spinner('🔍 Analyzing employee data with AI...'):
+    with st.spinner('Analyzing employee data'):
         # Your existing prediction processing code here
         df = pd.DataFrame([input_data])
         
@@ -773,9 +779,9 @@ else:
     # Enhanced Results Container
     st.markdown("""
     <div class="prediction-container">
-        <h2 class="results-header">
-            AI Prediction Results
-        </h2>
+        <h3 class="results-header">
+            Prediction Results
+        </h3>
     </div>
     """, unsafe_allow_html=True)
 
@@ -794,7 +800,7 @@ else:
 
         top3_df = shap_df[shap_df['shap_value'] > 0].sort_values('shap_value', ascending=False).head(3)
         
-        col_gauge, col_chart = st.columns([1, 1.5])
+        col_gauge, div_col, col_chart = st.columns([1, 0.1, 1])
 
         with col_gauge:
             # Enhanced gauge chart
@@ -805,7 +811,7 @@ else:
                 value = probability_percent,
                 domain = {'x': [0, 1], 'y': [0, 1]},
                 title = {'text': ""},
-                number = {'font': {'size': 60, 'color': '#2d3748', 'family': 'Inter'}, 'suffix': '%'},
+                number = {'font': {'size': 42, 'color': '#2d3748', 'family': 'Inter'}, 'suffix': '%'},
                 gauge = {
                     'axis': {
                         'range': [None, 100], 
@@ -831,7 +837,7 @@ else:
             ))
             
             fig_gauge.update_layout(
-                height=280,
+                height=150,
                 margin=dict(l=20, r=20, t=20, b=20),
                 font={'color': "#2d3748", 'family': 'Inter'},
                 paper_bgcolor="white"
@@ -842,8 +848,8 @@ else:
             # Enhanced status badge
             st.markdown(f"""
             <div class="probability-label">
-                <p style="margin: 5px 0; font-size: 16px;">Resignation Probability</p>
-                <div class="risk-badge-high">
+                <p style="font-size: 16px;">Resignation Probability</p>
+                <div class="risk-badge-high" style="margin-top: -5px;">
                     <i class="fa-solid fa-triangle-exclamation"></i> HIGH RISK
                 </div>
             </div>
@@ -852,83 +858,45 @@ else:
             st.markdown('</div>', unsafe_allow_html=True)
         
         with col_chart:
-            # Enhanced SHAP chart title
-            st.markdown("""
-            <h5 class="shap-title">Top Risk Factors</h5>
-            """, unsafe_allow_html=True)
-            
-            # Enhanced SHAP visualization
-            top3_df = top3_df.sort_values('shap_value', ascending=True)
-            fig_shap = go.Figure()
-            
-            colors = ['#ff6b6b', '#ee5a52', '#dc2626']
-            
-            for i, (_, row) in enumerate(top3_df.iterrows()):
-                fig_shap.add_trace(go.Bar(
-                    x=[row['shap_value']],
-                    y=[row['feature']],
-                    orientation='h',
-                    marker=dict(
-                        color=colors[i % len(colors)],
-                        line=dict(width=0),
-                        opacity=0.8
-                    ),
-                    text=[f"{row['shap_value']:.2f}"],
-                    textposition='outside',
-                    textfont=dict(color='#2d3748', size=16, family='Inter', weight='bold'),
-                    showlegend=False,
-                    hovertemplate='<b>%{y}</b><br>Impact Score: %{x:.2f}<extra></extra>'
-                ))
+            with st.container(border=True):
+                # Enhanced SHAP title
+                st.markdown("""
+                <h5 class="shap-title">Top Risk Factors</h5>
+                """, unsafe_allow_html=True)
+                
+                # Sort by SHAP value (descending for highest impact first)
+                top3_df = top3_df.sort_values('shap_value', ascending=False)
+                
+                # Display top 3 factors as simple text
+                for i, (_, row) in enumerate(top3_df.iterrows(), 1):
+                    st.markdown(f"""
+                    <div style="margin-left: 20px; margin-bottom: 10px;">
+                        <strong>{i}. {row['feature']}</strong> - Impact Score: {row['shap_value']:.2f}
+                    </div>
+                    """, unsafe_allow_html=True)
 
-            fig_shap.update_layout(
-                height=220,
-                bargap=0.4,
-                margin=dict(l=200, r=60, t=10, b=30),
-                xaxis=dict(
-                    visible=False,
-                    range=[0, max(top3_df['shap_value']) * 1.4]
-                ), 
-                yaxis=dict(
-                    title='',
-                    categoryorder='total ascending',
-                    tickfont=dict(size=14, color='#2d3748', family='Inter'),
-                    gridcolor='rgba(0,0,0,0)'
-                ),
-                plot_bgcolor='white',
-                paper_bgcolor='white',
-                font=dict(color='#2d3748', family='Inter'),
-            )
-            
-            st.plotly_chart(fig_shap, use_container_width=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-        
         st.markdown('</div>', unsafe_allow_html=True)
         
         # Enhanced divider
         st.markdown('<hr class="divider-custom">', unsafe_allow_html=True)
 
         # Enhanced Recommendations section
-        st.markdown('<div class="recommendation-section"><h2 class="recommendation-header">Strategic Recommendations</h2>', unsafe_allow_html=True)        
+        st.markdown("""<div class="prediction-container"><h3 class="results-header">Strategic Recommendations</h3></div>""",unsafe_allow_html=True)    
         col1, col2 = st.columns(2)
         
         recommendations = []
         for _, row in top3_df.iterrows():
             feat = row['feature']
             if any(x in feat for x in ['MonthlyIncome', 'PercentSalaryHike']):
-                recommendations.append(("💰 Compensation Strategy", 
-                                    "• Conduct comprehensive salary benchmarking<br>• Implement performance-based incentives<br>• Review total compensation package<br>• Consider retention bonuses"))
+                recommendations.append(("<i class='fa-solid fa-wallet'></i> Compensation Strategy", "Offer Competitive (Market-Rate) Salaries", "A significant increase in income or benefits is considered \"very important\" by 80%+ employees. Ensuring pay matches market rates is key to attract and retain talent (<a href='https://www.gallup.com/workplace/389807/top-things-employees-next-job.aspx'>Source</a>)"))
             elif any(x in feat for x in ['OverTime', 'WorkLifeBalance', 'AvgWorkHours', 'DistanceFromHome']):
-                recommendations.append(("⚖️ Work-Life Balance", 
-                                    "• Implement flexible working arrangements<br>• Monitor and reduce excessive overtime<br>• Offer remote work options<br>• Provide wellness programs"))
+                recommendations.append(("<i class='fa-solid fa-scale-balanced'></i> Work-Life Balance", "Implement Flexible Work Policies", "Around 50% of employees would leave for better work-life balance and flexible arrangements (<a href='https://www.ey.com/en_sg/newsroom/2022/07/employee-influence-in-singapore-grows-51-percentage-set-to-quit-jobs-for-better-pay-career-opportunities-and-flexibility'>Source</a>)"))
             elif any(x in feat for x in ['TotalWorkingYears', 'YearsAtCompany', 'YearsSinceLastPromotion', 'NumCompaniesWorked', 'TrainingTimesLastYear']):
-                recommendations.append(("🚀 Career Development", 
-                                    "• Create clear career progression paths<br>• Accelerate promotion timeline<br>• Provide advanced training opportunities<br>• Implement mentorship programs"))
+                recommendations.append(("<i class='fa-solid fa-rocket'></i> Career Development", "Provide Development & Training Programs", "94% say they’d stay longer if their company invested in career growth and training (<a href='https://www.linkedin.com/posts/linkedinlearning_94-of-employees-say-that-they-would-stay-activity-6372632932300963840-k9hI'>Source</a>)"))
             elif any(x in feat for x in ['EnvironmentSatisfaction', 'YearsWithCurrManager', 'JobSatisfaction']):
-                recommendations.append(("🤝 Workplace Culture", 
-                                    "• Conduct regular satisfaction surveys<br>• Improve manager-employee relationships<br>• Foster team collaboration<br>• Address workplace environment issues"))
+                recommendations.append(("<i class='fa-solid fa-handshake'></i> Workplace Culture", "Conduct Stay Interviews", "Stay interviews help identify satisfaction drivers and fix issues before people leave (<a href='https://hr.nih.gov/sites/default/files/public/documents/2024-03/stay-interview-guide.pdf'>Source</a>)"))
             elif any(x in feat for x in ['JobRole', 'Department', 'EducationField']):
-                recommendations.append(("🔄 Role Optimization", 
-                                    "• Explore internal mobility opportunities<br>• Consider job redesign or enrichment<br>• Align role with employee strengths<br>• Provide cross-functional projects"))
+                recommendations.append(("<i class='fa-solid fa-people-arrows'></i> Role Optimization", "Strategic Job Rotation", "Job rotation can increase retention by up to 23% and boost satisfaction by 15% (<a href='https://blogs.psico-smart.com/blog-maximizing-the-effectiveness-of-employee-rotation-programs-best-practices-and-strategies-12164'>Source</a>)"))
         
         # Remove duplicates while preserving order
         unique_recommendations = []
@@ -938,12 +906,13 @@ else:
                 unique_recommendations.append(rec)
                 seen.add(rec[0])
         
-        for i, (title, content) in enumerate(unique_recommendations):
+        for i, (title, subtitle, content) in enumerate(unique_recommendations):
             if i % 2 == 0:
                 with col1:
                     st.markdown(f"""
                     <div class="enhanced-recommendation-card">
                         <div class="recommendation-title">{title}</div>
+                        <div class="recommendation-subtitle">{subtitle}</div>
                         <div class="recommendation-content">{content}</div>
                     </div>
                     """, unsafe_allow_html=True)
@@ -952,6 +921,7 @@ else:
                     st.markdown(f"""
                     <div class="enhanced-recommendation-card">
                         <div class="recommendation-title">{title}</div>
+                        <div class="recommendation-subtitle">{subtitle}</div>
                         <div class="recommendation-content">{content}</div>
                     </div>
                     """, unsafe_allow_html=True)
@@ -999,7 +969,7 @@ else:
 
             fig_gauge.update_layout(
                 height=280,
-                margin=dict(l=20, r=20, t=20, b=20),
+                margin=dict(l=20, r=20, t=-0, b=0),
                 font={'color': "#2d3748", 'family': 'Inter'},
                 paper_bgcolor="white"
             )
@@ -1007,9 +977,9 @@ else:
             st.plotly_chart(fig_gauge, use_container_width=True)
 
             st.markdown(f"""
-            <div class="probability-label">
-                <p style="margin: 5px 0; font-size: 16px;">Resignation Probability</p>
-                <div class="risk-badge-low">
+            <div class="probability-label" style="margin-top: -50px;">
+                <p style="font-size: 16px;">Resignation Probability</p>
+                <div class="risk-badge-low" style="margin-top: -5px;">
                     <i class="fa-solid fa-shield"></i> LOW RISK
                 </div>
             </div>
@@ -1021,7 +991,7 @@ else:
             st.markdown("""
             <div class="low-risk-message">
                 <div class="success-icon">🎉</div>
-                <h5 class="success-title">Excellent Retention Outlook</h5>
+                <h6 class="success-title">Excellent Retention Outlook</h6>
                 <p class="success-message">
                     This employee shows strong indicators for staying with the company. 
                     Continue current engagement strategies and maintain regular check-ins 

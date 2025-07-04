@@ -932,9 +932,7 @@ else:
         # Low risk scenario
         col_gauge, col_message = st.columns([1, 1.5])
 
-        with col_gauge:
-            st.markdown('<div class="gauge-container">', unsafe_allow_html=True)
-            
+        with col_gauge:            
             probability_percent = round(proba_resign * 100, 1)
             
             fig_gauge = go.Figure(go.Indicator(
@@ -985,8 +983,6 @@ else:
             </div>
             """, unsafe_allow_html=True)
             
-            st.markdown('</div>', unsafe_allow_html=True)
-
         with col_message:
             st.markdown("""
             <div class="low-risk-message">

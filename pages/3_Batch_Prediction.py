@@ -373,7 +373,7 @@ if uploaded_file is not None:
         st.write(f"Showing {len(filtered_df)} of {len(result_df)} employees")
         
         # Reorder columns for better display
-        display_cols = ['probability_resign', 'prediction', 'risk_category', 'top_3_features']
+        display_cols = ['probability_resign', 'prediction', 'top_3_features']
         other_cols = [col for col in filtered_df.columns if col not in display_cols]
         final_cols = other_cols + display_cols
         

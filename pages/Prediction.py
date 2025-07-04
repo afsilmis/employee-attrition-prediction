@@ -967,7 +967,7 @@ else:
 
             fig_gauge.update_layout(
                 height=200,
-                margin=dict(l=20, r=20, t=100, b=20),
+                margin=dict(l=20, r=20, t=20, b=20),
                 font={'color': "#2d3748", 'family': 'Inter'},
                 paper_bgcolor="white"
             )

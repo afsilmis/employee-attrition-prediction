@@ -990,7 +990,7 @@ else:
         with col_message:
             st.markdown("""
             <div class="low-risk-message">
-                <div class="success-icon"><i class="fa-solid fa-circle-check"></i></i></div>
+                <div class="success-icon"><i class="fa-solid fa-circle-check" style="color: #16a34a;"></i></div>
                 <h6 class="success-title">Excellent Retention Outlook</h6>
                 <p class="success-message">
                     This employee shows strong indicators for staying with the company. 
@@ -1000,8 +1000,7 @@ else:
                 <div style="margin-top: 2rem; padding: 1rem; background: #f0fdf4; 
                             border-radius: 10px; border: 1px solid #bbf7d0;">
                     <p style="color: #16a34a; font-weight: 600; margin: 0; font-size: 14px;">
-                        <i class="fa-solid fa-lightbulb"></i> Recommendation: Implement regular monitoring and periodic surveys to sustain employee satisfaction and support ongoing development.
-                    </p>
+                        <i class="fa-solid fa-lightbulb"></i> Recommendation: Conduct regular monitoring and surveys to sustain satisfaction and growth</p>
                 </div>
             </div>
             """, unsafe_allow_html=True)

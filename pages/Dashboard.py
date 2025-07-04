@@ -268,7 +268,7 @@ def generate_demographics_insights(df):
     yes_attrition = age_attrition[age_attrition['Attrition'] == 'Yes']
     if not yes_attrition.empty:
         highest_age_attrition = yes_attrition.loc[yes_attrition['Percentage'].idxmax()]
-        insights.append(f"🎯 **Age Group Risk**: {highest_age_attrition['AgeGroup']} age group has the highest attrition rate at {highest_age_attrition['Percentage']:.1f}%")
+        insights.append(f"**Age Group Risk**: {highest_age_attrition['AgeGroup']} age group has the highest attrition rate at {highest_age_attrition['Percentage']:.1f}%")
     
     # Gender Insights
     gender_attrition = df.groupby(['Gender', 'Attrition']).size().reset_index(name='Count')
@@ -280,9 +280,9 @@ def generate_demographics_insights(df):
         gender_diff = abs(gender_yes.iloc[0]['Percentage'] - gender_yes.iloc[1]['Percentage'])
         if gender_diff > 5:  # Significant difference
             higher_gender = gender_yes.loc[gender_yes['Percentage'].idxmax()]
-            insights.append(f"👥 **Gender Pattern**: {higher_gender['Gender']} employees show {gender_diff:.1f}% higher attrition rate")
+            insights.append(f"**Gender Pattern**: {higher_gender['Gender']} employees show {gender_diff:.1f}% higher attrition rate")
         else:
-            insights.append(f"⚖️ **Gender Balance**: Attrition rates are relatively balanced across genders (difference < 5%)")
+            insights.append(f"**Gender Balance**: Attrition rates are relatively balanced across genders (difference < 5%)")
     
     # Marital Status Insights
     marital_attrition = pd.crosstab(df['MaritalStatus'], df['Attrition'])
@@ -291,7 +291,7 @@ def generate_demographics_insights(df):
     if 'Yes' in marital_percent.columns:
         highest_marital = marital_percent['Yes'].idxmax()
         highest_marital_rate = marital_percent['Yes'].max()
-        insights.append(f"💑 **Marital Status Impact**: {highest_marital} employees have the highest attrition rate at {highest_marital_rate:.1f}%")
+        insights.append(f"**Marital Status Impact**: {highest_marital} employees have the highest attrition rate at {highest_marital_rate:.1f}%")
     
     # Education Level Insights
     edu_attrition = pd.crosstab(df['Education'], df['Attrition'])
@@ -307,14 +307,14 @@ def generate_demographics_insights(df):
         lowest_edu = edu_percent_named['Yes'].idxmin()
         lowest_edu_rate = edu_percent_named['Yes'].min()
         
-        insights.append(f"🎓 **Education Pattern**: {highest_edu} level shows highest attrition ({highest_edu_rate:.1f}%), while {lowest_edu} shows lowest ({lowest_edu_rate:.1f}%)")
+        insights.append(f"**Education Pattern**: {highest_edu} level shows highest attrition ({highest_edu_rate:.1f}%), while {lowest_edu} shows lowest ({lowest_edu_rate:.1f}%)")
     
     # Overall demographic summary
     total_employees = len(df)
     total_attrition = len(df[df['Attrition'] == 'Yes'])
     attrition_rate = (total_attrition / total_employees) * 100
     
-    insights.append(f"📈 **Overall**: {total_attrition} out of {total_employees} employees left ({attrition_rate:.1f}% attrition rate)")
+    insights.append(f"**Overall**: {total_attrition} out of {total_employees} employees left ({attrition_rate:.1f}% attrition rate)")
     
     return insights
 
@@ -401,11 +401,11 @@ def generate_work_insights(df):
     wlb_diff = wlb_no - wlb_yes
     
     if wlb_diff > 0.3:
-        insights.append(f"⚖️ **Work-Life Balance**: Employees who left had {wlb_diff:.1f} points lower work-life balance (Average: {wlb_yes:.1f} vs {wlb_no:.1f})")
+        insights.append(f"**Work-Life Balance**: Employees who left had {wlb_diff:.1f} points lower work-life balance (Average: {wlb_yes:.1f} vs {wlb_no:.1f})")
     elif wlb_diff > 0.1:
-        insights.append(f"⚖️ **Work-Life Balance**: Slight difference in work-life balance between leavers and stayers ({wlb_diff:.1f} points)")
+        insights.append(f"**Work-Life Balance**: Slight difference in work-life balance between leavers and stayers ({wlb_diff:.1f} points)")
     else:
-        insights.append(f"⚖️ **Work-Life Balance**: No significant difference in work-life balance scores")
+        insights.append(f"**Work-Life Balance**: No significant difference in work-life balance scores")
     
     # Overtime Analysis
     overtime_yes = df[df['Attrition'] == 'Yes']['OvertimeDays'].mean()
@@ -413,11 +413,11 @@ def generate_work_insights(df):
     overtime_diff = overtime_yes - overtime_no
     
     if overtime_diff > 10:
-        insights.append(f"⏰ **Overtime Alert**: Employees who left worked {overtime_diff:.1f} more overtime days on average ({overtime_yes:.1f} vs {overtime_no:.1f})")
+        insights.append(f"**Overtime Alert**: Employees who left worked {overtime_diff:.1f} more overtime days on average ({overtime_yes:.1f} vs {overtime_no:.1f})")
     elif overtime_diff > 5:
-        insights.append(f"⏰ **Overtime Concern**: Moderate overtime difference between leavers and stayers ({overtime_diff:.1f} days)")
+        insights.append(f"**Overtime Concern**: Moderate overtime difference between leavers and stayers ({overtime_diff:.1f} days)")
     else:
-        insights.append(f"⏰ **Overtime Balance**: Similar overtime patterns across both groups")
+        insights.append(f"**Overtime Balance**: Similar overtime patterns across both groups")
     
     # Job Satisfaction Analysis
     job_sat_yes = df[df['Attrition'] == 'Yes']['JobSatisfaction'].mean()
@@ -425,11 +425,11 @@ def generate_work_insights(df):
     job_sat_diff = job_sat_no - job_sat_yes
     
     if job_sat_diff > 0.5:
-        insights.append(f"😊 **Job Satisfaction**: Strong correlation with retention - leavers scored {job_sat_diff:.1f} points lower ({job_sat_yes:.1f} vs {job_sat_no:.1f})")
+        insights.append(f"**Job Satisfaction**: Strong correlation with retention - leavers scored {job_sat_diff:.1f} points lower ({job_sat_yes:.1f} vs {job_sat_no:.1f})")
     elif job_sat_diff > 0.2:
-        insights.append(f"😊 **Job Satisfaction**: Moderate impact on retention ({job_sat_diff:.1f} points difference)")
+        insights.append(f"**Job Satisfaction**: Moderate impact on retention ({job_sat_diff:.1f} points difference)")
     else:
-        insights.append(f"😊 **Job Satisfaction**: Similar satisfaction levels across groups")
+        insights.append(f"**Job Satisfaction**: Similar satisfaction levels across groups")
     
     # Environment Satisfaction Analysis
     env_sat_yes = df[df['Attrition'] == 'Yes']['EnvironmentSatisfaction'].mean()
@@ -437,11 +437,11 @@ def generate_work_insights(df):
     env_sat_diff = env_sat_no - env_sat_yes
     
     if env_sat_diff > 0.5:
-        insights.append(f"🏢 **Environment Impact**: Work environment strongly affects retention - {env_sat_diff:.1f} points difference ({env_sat_yes:.1f} vs {env_sat_no:.1f})")
+        insights.append(f"**Environment Impact**: Work environment strongly affects retention - {env_sat_diff:.1f} points difference ({env_sat_yes:.1f} vs {env_sat_no:.1f})")
     elif env_sat_diff > 0.2:
-        insights.append(f"🏢 **Environment Factor**: Work environment moderately impacts retention ({env_sat_diff:.1f} points)")
+        insights.append(f"**Environment Factor**: Work environment moderately impacts retention ({env_sat_diff:.1f} points)")
     else:
-        insights.append(f"🏢 **Environment Neutral**: Environment satisfaction similar across groups")
+        insights.append(f"**Environment Neutral**: Environment satisfaction similar across groups")
     
     # Low satisfaction risk analysis
     low_job_sat = len(df[(df['JobSatisfaction'] <= 2) & (df['Attrition'] == 'Yes')])
@@ -449,7 +449,7 @@ def generate_work_insights(df):
     
     if total_low_job_sat > 0:
         low_sat_risk = (low_job_sat / total_low_job_sat) * 100
-        insights.append(f"🚨 **Low Satisfaction Risk**: {low_sat_risk:.1f}% of employees with low job satisfaction (≤2) eventually left")
+        insights.append(f"**Low Satisfaction Risk**: {low_sat_risk:.1f}% of employees with low job satisfaction (≤2) eventually left")
     
     return insights
 
@@ -529,7 +529,7 @@ def generate_compensation_insights(df):
         highest_perf_attrition = yes_attrition.loc[yes_attrition['Percentage'].idxmax()]
         lowest_perf_attrition = yes_attrition.loc[yes_attrition['Percentage'].idxmin()]
         
-        insights.append(f"📊 **Performance Paradox**: Rating {highest_perf_attrition['PerformanceRating']} has highest attrition ({highest_perf_attrition['Percentage']:.1f}%), while rating {lowest_perf_attrition['PerformanceRating']} has lowest ({lowest_perf_attrition['Percentage']:.1f}%)")
+        insights.append(f"**Performance Paradox**: Rating {highest_perf_attrition['PerformanceRating']} has highest attrition ({highest_perf_attrition['Percentage']:.1f}%), while rating {lowest_perf_attrition['PerformanceRating']} has lowest ({lowest_perf_attrition['Percentage']:.1f}%)")
     
     # Monthly Income Analysis
     income_yes = df[df['Attrition'] == 'Yes']['MonthlyIncome'].mean()
@@ -538,11 +538,11 @@ def generate_compensation_insights(df):
     income_diff_percent = (income_diff / income_yes) * 100
     
     if income_diff > 5000:
-        insights.append(f"💸 **Salary Gap**: Employees who left earned ${income_diff:,.0f} less on average (${income_yes:,.0f} vs ${income_no:,.0f} - {income_diff_percent:.1f}% difference)")
+        insights.append(f"**Salary Gap**: Employees who left earned ${income_diff:,.0f} less on average (${income_yes:,.0f} vs ${income_no:,.0f} - {income_diff_percent:.1f}% difference)")
     elif income_diff > 1000:
-        insights.append(f"💰 **Moderate Income Gap**: ${income_diff:,.0f} average income difference between leavers and stayers")
+        insights.append(f"**Moderate Income Gap**: ${income_diff:,.0f} average income difference between leavers and stayers")
     else:
-        insights.append(f"💰 **Income Parity**: Similar income levels across both groups (${income_diff:,.0f} difference)")
+        insights.append(f"**Income Parity**: Similar income levels across both groups (${income_diff:,.0f} difference)")
     
     # Salary Hike Analysis
     hike_yes = df[df['Attrition'] == 'Yes']['PercentSalaryHike'].mean()
@@ -550,11 +550,11 @@ def generate_compensation_insights(df):
     hike_diff = hike_no - hike_yes
     
     if hike_diff > 2:
-        insights.append(f"📈 **Salary Hike Impact**: Employees who stayed received {hike_diff:.1f}% higher salary increases ({hike_yes:.1f}% vs {hike_no:.1f}%)")
+        insights.append(f"**Salary Hike Impact**: Employees who stayed received {hike_diff:.1f}% higher salary increases ({hike_yes:.1f}% vs {hike_no:.1f}%)")
     elif hike_diff > 0.5:
-        insights.append(f"📈 **Modest Hike Difference**: {hike_diff:.1f}% difference in salary increases")
+        insights.append(f"**Modest Hike Difference**: {hike_diff:.1f}% difference in salary increases")
     else:
-        insights.append(f"📈 **Equal Opportunity**: Similar salary hike patterns across both groups")
+        insights.append(f"**Equal Opportunity**: Similar salary hike patterns across both groups")
     
     # Low income risk analysis
     median_income = df['MonthlyIncome'].median()
@@ -565,7 +565,7 @@ def generate_compensation_insights(df):
     
     if total_low_income > 0:
         low_income_risk = (low_income_attrition / total_low_income) * 100
-        insights.append(f"🚨 **Low Income Risk**: {low_income_risk:.1f}% of employees earning below ${low_income_threshold:,.0f} eventually left")
+        insights.append(f"**Low Income Risk**: {low_income_risk:.1f}% of employees earning below ${low_income_threshold:,.0f} eventually left")
     
     # High performer retention analysis
     high_performers = df[df['PerformanceRating'] >= 4]  # Assuming 4+ is high performance
@@ -574,9 +574,9 @@ def generate_compensation_insights(df):
         high_perf_rate = (high_perf_attrition / len(high_performers)) * 100
         
         if high_perf_rate > 15:
-            insights.append(f"⭐ **High Performer Alert**: {high_perf_rate:.1f}% of high performers (rating 4+) left the company - critical talent retention issue")
+            insights.append(f"**High Performer Alert**: {high_perf_rate:.1f}% of high performers (rating 4+) left the company - critical talent retention issue")
         else:
-            insights.append(f"⭐ **High Performer Retention**: Good retention of high performers - only {high_perf_rate:.1f}% attrition rate")
+            insights.append(f"**High Performer Retention**: Good retention of high performers - only {high_perf_rate:.1f}% attrition rate")
     
     # Compensation vs Performance correlation
     avg_income_by_rating = df.groupby('PerformanceRating')['MonthlyIncome'].mean()
@@ -590,11 +590,11 @@ def generate_compensation_insights(df):
         income_correlation = np.corrcoef(performance_ratings, income_values)[0, 1]
         
         if income_correlation > 0.5:
-            insights.append(f"🎯 **Pay-Performance Alignment**: Strong correlation ({income_correlation:.2f}) between performance rating and compensation")
+            insights.append(f"**Pay-Performance Alignment**: Strong correlation ({income_correlation:.2f}) between performance rating and compensation")
         elif income_correlation > 0.2:
-            insights.append(f"📊 **Moderate Pay-Performance Link**: Moderate correlation ({income_correlation:.2f}) between performance and compensation")
+            insights.append(f"**Moderate Pay-Performance Link**: Moderate correlation ({income_correlation:.2f}) between performance and compensation")
         else:
-            insights.append(f"⚠️ **Pay-Performance Misalignment**: Weak correlation ({income_correlation:.2f}) between performance and compensation - review pay equity")
+            insights.append(f"**Pay-Performance Misalignment**: Weak correlation ({income_correlation:.2f}) between performance and compensation - review pay equity")
     
     return insights
 
@@ -651,7 +651,7 @@ def generate_department_insights(df):
         highest_dept = dept_yes.loc[dept_yes['Percentage'].idxmax()]
         lowest_dept = dept_yes.loc[dept_yes['Percentage'].idxmin()]
         
-        insights.append(f"🏢 **Department Risk**: {highest_dept['Department']} has highest attrition at {highest_dept['Percentage']:.1f}%, while {lowest_dept['Department']} has lowest at {lowest_dept['Percentage']:.1f}%")
+        insights.append(f"**Department Risk**: {highest_dept['Department']} has highest attrition at {highest_dept['Percentage']:.1f}%, while {lowest_dept['Department']} has lowest at {lowest_dept['Percentage']:.1f}%")
     
     # Calculate attrition rates by job role
     role_attrition = df.groupby(['JobRole', 'Attrition']).size().reset_index(name='Count')
@@ -664,7 +664,7 @@ def generate_department_insights(df):
         highest_role = role_yes.loc[role_yes['Percentage'].idxmax()]
         lowest_role = role_yes.loc[role_yes['Percentage'].idxmin()]
         
-        insights.append(f"👔 **Role Risk**: {highest_role['JobRole']} shows highest attrition at {highest_role['Percentage']:.1f}%, while {lowest_role['JobRole']} shows lowest at {lowest_role['Percentage']:.1f}%")
+        insights.append(f"**Role Risk**: {highest_role['JobRole']} shows highest attrition at {highest_role['Percentage']:.1f}%, while {lowest_role['JobRole']} shows lowest at {lowest_role['Percentage']:.1f}%")
     
     # Analyze department-role combinations from heatmap
     pivot = (
@@ -695,12 +695,12 @@ def generate_department_insights(df):
         # Get top 3 highest risk combinations
         top_risk = max_combinations[:3]
         if top_risk:
-            insights.append(f"🎯 **Highest Risk Combination**: {top_risk[0]['JobRole']} in {top_risk[0]['Department']} ({top_risk[0]['AttritionRate']:.1f}% attrition)")
+            insights.append(f"**Highest Risk Combination**: {top_risk[0]['JobRole']} in {top_risk[0]['Department']} ({top_risk[0]['AttritionRate']:.1f}% attrition)")
         
         # Get combinations with 0% attrition (if any)
         zero_attrition = [combo for combo in max_combinations if combo['AttritionRate'] == 0]
         if zero_attrition:
-            insights.append(f"✅ **Perfect Retention**: {len(zero_attrition)} role-department combinations have 0% attrition")
+            insights.append(f"**Perfect Retention**: {len(zero_attrition)} role-department combinations have 0% attrition")
     
     # Department size analysis
     dept_sizes = df['Department'].value_counts()
@@ -710,19 +710,19 @@ def generate_department_insights(df):
     # Check if largest department has high attrition
     largest_dept_attrition = dept_yes[dept_yes['Department'] == largest_dept]['Percentage'].iloc[0] if len(dept_yes[dept_yes['Department'] == largest_dept]) > 0 else 0
     
-    insights.append(f"📊 **Department Scale**: {largest_dept} is largest department ({dept_sizes[largest_dept]} employees) with {largest_dept_attrition:.1f}% attrition")
+    insights.append(f"**Department Scale**: {largest_dept} is largest department ({dept_sizes[largest_dept]} employees) with {largest_dept_attrition:.1f}% attrition")
     
     # Role diversity analysis
     role_counts = df['JobRole'].value_counts()
     most_common_role = role_counts.index[0]
     most_common_role_attrition = role_yes[role_yes['JobRole'] == most_common_role]['Percentage'].iloc[0] if len(role_yes[role_yes['JobRole'] == most_common_role]) > 0 else 0
     
-    insights.append(f"👥 **Role Distribution**: {most_common_role} is most common role ({role_counts[most_common_role]} employees) with {most_common_role_attrition:.1f}% attrition")
+    insights.append(f"**Role Distribution**: {most_common_role} is most common role ({role_counts[most_common_role]} employees) with {most_common_role_attrition:.1f}% attrition")
     
     # Critical combinations analysis
     critical_combinations = [combo for combo in max_combinations if combo['AttritionRate'] > 30]
     if critical_combinations:
-        insights.append(f"🚨 **Critical Alert**: {len(critical_combinations)} role-department combinations have >30% attrition rate")
+        insights.append(f"**Critical Alert**: {len(critical_combinations)} role-department combinations have >30% attrition rate")
     
     return insights
 

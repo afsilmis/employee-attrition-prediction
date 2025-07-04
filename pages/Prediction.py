@@ -930,7 +930,7 @@ else:
         
     else:
         # Low risk scenario
-        col_gauge, col_message = st.columns([1, 1.5])
+        col_gauge, col, col_message = st.columns([1, 0.1, 1.5])
 
         with col_gauge:            
             probability_percent = round(proba_resign * 100, 1)
@@ -966,7 +966,7 @@ else:
             ))
 
             fig_gauge.update_layout(
-                height=280,
+                height=200,
                 margin=dict(l=20, r=20, t=-0, b=0),
                 font={'color': "#2d3748", 'family': 'Inter'},
                 paper_bgcolor="white"

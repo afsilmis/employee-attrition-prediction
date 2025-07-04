@@ -940,7 +940,7 @@ else:
                 value = probability_percent,
                 domain = {'x': [0, 1], 'y': [0, 1]},
                 title = {'text': ""},
-                number = {'font': {'size': 60, 'color': '#2d3748', 'family': 'Inter'}, 'suffix': '%'},
+                number = {'font': {'size': 48, 'color': '#2d3748', 'family': 'Inter'}, 'suffix': '%'},
                 gauge = {
                     'axis': {
                         'range': [None, 100], 
@@ -967,7 +967,7 @@ else:
 
             fig_gauge.update_layout(
                 height=200,
-                margin=dict(l=20, r=20, t=20, b=20),
+                margin=dict(l=20, r=20, t=100, b=20),
                 font={'color': "#2d3748", 'family': 'Inter'},
                 paper_bgcolor="white"
             )

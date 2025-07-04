@@ -930,7 +930,7 @@ else:
         
     else:
         # Low risk scenario
-        col_gauge, col, col_message = st.columns([1, 0.1, 1.5])
+        col_gauge, col, col_message = st.columns([1, 0.1, 1.2])
 
         with col_gauge:            
             probability_percent = round(proba_resign * 100, 1)
@@ -967,7 +967,7 @@ else:
 
             fig_gauge.update_layout(
                 height=200,
-                margin=dict(l=20, r=20, t=-0, b=0),
+                margin=dict(l=20, r=20, t=20, b=20),
                 font={'color': "#2d3748", 'family': 'Inter'},
                 paper_bgcolor="white"
             )
@@ -975,7 +975,7 @@ else:
             st.plotly_chart(fig_gauge, use_container_width=True)
 
             st.markdown(f"""
-            <div class="probability-label" style="margin-top: -50px;">
+            <div class="probability-label">
                 <p style="font-size: 16px;">Resignation Probability</p>
                 <div class="risk-badge-low" style="margin-top: -5px;">
                     <i class="fa-solid fa-shield"></i> LOW RISK

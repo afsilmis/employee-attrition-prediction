@@ -94,25 +94,29 @@ ordinal_options = {
 # Header Section
 st.markdown("""
 <div>
-    <h1 style="color: black; margin: 0; text-align: center;">Welcome to 3Sigma Squad</h1>
+    <h1 style="color: black; margin: 0; text-align: center;">Attrition Prediction Dashboard</h1>
+    <p style="text-align: center; font-size: 16px; color: gray;">by 3Sigma Squad</p>
 </div>
 """, unsafe_allow_html=True)
 st.markdown("---")
 
 # Hero Section
-st.markdown('<div class="section-header"><h3><i class="fa-solid fa-magnifying-glass-chart"></i> Advanced Analytics & Prediction Platform</h3></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="fa-solid fa-brain"></i> What This App Does</h3></div>', unsafe_allow_html=True)
 st.markdown("""
-Welcome to the advanced analytics platform from 3Sigma Squad. Gain deep insights and accurate predictions to support your business decision-making.
+This dashboard helps HR identify employees at risk of leaving the company using machine learning.
 
-**Key Features:**<br>
-- **Interactive Dashboard** — Real-time data visualizations<br>
-- **Prediction Engine** — Machine learning predictive models <br>
-- **High Accuracy** — Optimized models for best performance
-""", unsafe_allow_html=True)
+**What you can do:**  
+- Predict attrition for individuals or in bulk  
+- View risk scores and key contributing factors  
+- Download predictions and act accordingly
+
+To get started, choose a page below or use the sidebar navigation.
+""")
 
 # Show Dummy Template
 st.markdown("---")
-st.markdown('<div class="section-header"><h3><i class=\'fa-solid fa-file-excel\'></i> Excel Template</h3></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="fa-solid fa-file-excel"></i> Batch Prediction: Excel Template</h3></div>', unsafe_allow_html=True)
+st.markdown("Use this sample format to prepare your employee data for batch prediction.")
 
 num_rows = 3
 dummy_data = {}
@@ -152,6 +156,7 @@ st.download_button(
     mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 )
 
+
 # Quick Actions
 st.markdown("---")
 st.markdown('<div class="section-header"><h3><i class="fa-solid fa-location-arrow"></i> Quick Actions</h3></div>', unsafe_allow_html=True)
@@ -160,15 +165,15 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     if st.button("Dashboard", use_container_width=True):
-        st.switch_page("pages/dashboard.py")  # Pastikan path sesuai
+        st.switch_page("pages/1_Dashboard.py")  # Pastikan path sesuai
 
 with col2:
     if st.button("Individual Prediction", use_container_width=True):
-        st.switch_page("pages/individual_prediction.py")  # Pastikan path sesuai
+        st.switch_page("pages/2_Individual_Prediction.py")  
 
 with col3:
     if st.button("Batch Prediction", use_container_width=True):
-        st.switch_page("pages/batch_prediction.py")  # Pastikan path sesuai
+        st.switch_page("pages/3_Batch_Prediction.py")  
 
 # Footer
 st.markdown("---")

@@ -5,7 +5,6 @@ import shap
 import joblib
 from catboost import CatBoostClassifier
 import io
-import matplotlib.pyplot as plt
 import plotly.express as px
 import random
 
@@ -100,7 +99,18 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown("---")
 
-uploaded_file = st.file_uploader("Upload Excel file", type=['xlsx', 'xls'])
+import pandas as pd
+import streamlit as st
+
+uploaded_file = st.file_uploader("Upload file", type=['xlsx', 'xls', 'csv'])
+
+if uploaded_file is not None:
+    if uploaded_file.name.endswith('.csv'):
+        df = pd.read_csv(uploaded_file)
+    else:
+        df = pd.read_excel(uploaded_file)
+    
+    st.write(df)
 
 # === Show Dummy Template ===
 st.markdown("### <i class='fa-solid fa-file-excel'></i> Excel Template", unsafe_allow_html=True)
@@ -144,9 +154,15 @@ st.download_button(
 )
 
 if uploaded_file is not None:
-    df_input = pd.read_excel(uploaded_file)
+    # Tentukan jenis file berdasarkan ekstensi
+    if uploaded_file.name.endswith('.csv'):
+        df_input = pd.read_csv(uploaded_file)
+    else:
+        df_input = pd.read_excel(uploaded_file)
+
     st.markdown("### <i class='fa-solid fa-table'></i> Data Preview", unsafe_allow_html=True)
     st.dataframe(df_input.head())
+
 
     # === Preprocessing ===
     df = df_input.copy()
@@ -428,11 +444,10 @@ if uploaded_file is not None:
             )
         
         with col2:
-            # CSV download for filtered results
-            csv_data = filtered_df.to_csv(index=False)
+            filtered_data = filtered_df.to_csv(index=False)
             st.download_button(
-                label="Download Filtered Results (CSV)",
-                data=csv_data,
-                file_name=f'filtered_predictions_{pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")}.csv',
-                mime='text/csv'
+                label="Download Filtered Results (Excel)",
+                data=filtered_data,
+                file_name=f'filtered_predictions_{pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")}.xlsx',
+                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )

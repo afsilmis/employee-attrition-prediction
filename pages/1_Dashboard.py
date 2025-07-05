@@ -1,9 +1,6 @@
 import streamlit as st
 import plotly.express as px
-import plotly.graph_objects as go
 import pandas as pd
-import numpy as np
-from datetime import datetime
 import io
 import random
 
@@ -133,7 +130,7 @@ st.markdown("""
 st.markdown("---")
 
 # Load data
-uploaded_file = st.file_uploader("Upload Excel file", type=['xlsx', 'xls'])
+uploaded_file = st.file_uploader("Upload Excel file", type=['xlsx', 'xls', 'csv'])
 
 # === Show Dummy Template ===
 st.markdown("#### <i class='fa-solid fa-file-excel'></i> Excel Template", unsafe_allow_html=True)
@@ -176,9 +173,12 @@ st.download_button(
     mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 )
 
-if uploaded_file:
-    df = pd.read_excel(uploaded_file)
-    st.success("File uploaded successfully.")
+if uploaded_file is not None:
+    # Tentukan jenis file berdasarkan ekstensi
+    if uploaded_file.name.endswith('.csv'):
+        df = pd.read_csv(uploaded_file)
+    else:
+        df = pd.read_excel(uploaded_file)
 else:
     df = pd.read_excel('data/raw/attrition.xlsx')
 st.markdown("---")

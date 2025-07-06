@@ -130,7 +130,7 @@ st.markdown("""
 st.markdown("---")
 
 # Load data
-uploaded_file = st.file_uploader("Upload Excel file", type=['xlsx', 'xls', 'csv'])
+uploaded_file = st.file_uploader("Upload file", type=['xlsx', 'xls', 'csv'])
 
 # === Show Dummy Template ===
 st.markdown("#### <i class='fa-solid fa-file-excel'></i> Excel Template", unsafe_allow_html=True)

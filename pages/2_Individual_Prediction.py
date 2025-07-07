@@ -1,3 +1,6 @@
+# ========================
+# IMPORT LIBRARIES
+# ========================
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -6,33 +9,39 @@ from catboost import CatBoostClassifier
 import shap
 import plotly.graph_objects as go
 
-# PAGE CONFIG
+# ========================
+# PAGE CONFIGURATION
+# ========================
 st.set_page_config(
     page_title="HR Analytics Dashboard",
     layout="wide"
 )
 
-# Load Font Awesome
+# Load Font Awesome for icons
 st.markdown("""
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 """, unsafe_allow_html=True)
 
 # ========================
-# ENHANCED CUSTOM CSS
+# ENHANCED CUSTOM CSS STYLING
 # ========================
 st.markdown("""
     <style>
+    /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
+    /* Global font family */
     * {
         font-family: 'Inter', sans-serif;
     }
     
+    /* Main container styling */
     .main {
         padding: 1rem 2rem;
         min-height: 100vh;
     }
 
+    /* Main header styling */
     .main-header {
         font-size: 3.5rem;
         font-weight: 700;
@@ -44,6 +53,7 @@ st.markdown("""
         background-clip: text;
     }
 
+    /* Main container card styling */
     .main-container {
         background: white;
         border-radius: 20px;
@@ -53,6 +63,7 @@ st.markdown("""
         border: 1px solid rgba(255,255,255,0.2);
     }
 
+    /* Input section styling */
     .input-section {
         background: white;
         padding: 0;
@@ -60,11 +71,13 @@ st.markdown("""
         border-radius: 15px;
     }
 
+    /* Input group styling */
     .input-group {
         margin-top: 1.5rem;
         transition: all 0.3s ease;
     }
 
+    /* Input group header styling */
     .input-group h4 {
         color: #2d3748;
         font-weight: 600;
@@ -74,6 +87,7 @@ st.markdown("""
         gap: 0.5rem;
     }
 
+    /* Section header styling */
     .section-header {
         text-align: center;
         color: #667eea;
@@ -83,6 +97,7 @@ st.markdown("""
         position: relative;
     }
 
+    /* Section header underline effect */
     .section-header::after {
         content: '';
         position: absolute;
@@ -95,6 +110,7 @@ st.markdown("""
         border-radius: 2px;
     }
 
+    /* Selectbox styling */
     .stSelectbox > div > div {
         background: white;
         border: 2px solid #e1e8f7;
@@ -102,10 +118,12 @@ st.markdown("""
         transition: all 0.3s ease;
     }
 
+    /* Selectbox focus styling */
     .stSelectbox > div > div:focus-within {
         border-color: #667eea;
     }
 
+    /* Number input styling */
     .stNumberInput > div > div > input {
         background: white;
         border: 2px solid #e1e8f7;
@@ -114,10 +132,12 @@ st.markdown("""
         transition: all 0.3s ease;
     }
 
+    /* Number input focus styling */
     .stNumberInput > div > div > input:focus {
         border-color: #667eea;
     }
 
+    /* Button styling */
     .stButton > button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white !important;
@@ -132,15 +152,18 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
+    /* Button hover effect */
     .stButton > button:hover {
         transform: translateY(-3px);
         background: linear-gradient(135deg, #5a67d8 0%, #6b5b95 100%);
     }
 
+    /* Button active effect */
     .stButton > button:active {
         transform: translateY(-1px);
     }
 
+    /* Metric card styling */
     .metric-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -150,10 +173,12 @@ st.markdown("""
         transition: all 0.3s ease;
     }
 
+    /* Metric card hover effect */
     .metric-card:hover {
         transform: translateY(-5px);
     }
 
+    /* High risk prediction card styling */
     .prediction-card-high {
         background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
         color: white;
@@ -163,6 +188,7 @@ st.markdown("""
         margin: 2rem 0;
     }
 
+    /* Low risk prediction card styling */
     .prediction-card-low {
         background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
         color: white;
@@ -172,6 +198,7 @@ st.markdown("""
         margin: 2rem 0;
     }
 
+    /* Recommendation card styling */
     .recommendation-card {
         background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
         padding: 1.5rem;
@@ -181,9 +208,12 @@ st.markdown("""
         transition: all 0.3s ease;
     }
 
+    /* Recommendation card hover effect */
     .recommendation-card:hover {
         transform: translateX(5px);
+    }
 
+    /* Recommendation card header styling */
     .recommendation-card h4 {
         margin-top: 0;
         font-size: 1.1rem;
@@ -191,6 +221,7 @@ st.markdown("""
         font-weight: 600;
     }
 
+    /* Recommendation card paragraph styling */
     .recommendation-card p {
         margin: 0;
         line-height: 1.6;
@@ -198,12 +229,13 @@ st.markdown("""
         color: #4a5568;
     }
 
+    /* Main block container max width */
     .main .block-container {
         max-width: 1400px;
         margin: 0 auto;
     }
 
-    /* Loading animation */
+    /* Loading animation spinner */
     .loading-spinner {
         border: 4px solid #f3f3f3;
         border-top: 4px solid #667eea;
@@ -214,12 +246,13 @@ st.markdown("""
         margin: 20px auto;
     }
 
+    /* Spinner animation keyframes */
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
 
-    /* Responsive design */
+    /* Responsive design for mobile */
     @media (max-width: 768px) {
         .main-header {
             font-size: 2.5rem;
@@ -235,47 +268,283 @@ st.markdown("""
         }
     }
 
-    /* Custom scrollbar */
+    /* Custom scrollbar track */
     ::-webkit-scrollbar {
         width: 8px;
     }
 
+    /* Custom scrollbar track background */
     ::-webkit-scrollbar-track {
         background: #f1f1f1;
         border-radius: 10px;
     }
 
+    /* Custom scrollbar thumb */
     ::-webkit-scrollbar-thumb {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         border-radius: 10px;
     }
 
+    /* Custom scrollbar thumb hover effect */
     ::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(135deg, #5a67d8 0%, #6b5b95 100%);
+    }
+    
+    .prediction-container {
+        background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+        border-radius: 25px;
+        padding: 2.5rem;
+        margin: 2rem 0;
+        border: 1px solid rgba(102,126,234,0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .prediction-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .results-header {
+        text-align: center;
+        color: #2d3748;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .gauge-container {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+        position: relative;
+    }
+
+    .risk-badge-high {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 18px;
+        display: inline-block;
+        margin-top: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .risk-badge-low {
+        background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 18px;
+        display: inline-block;
+        margin-top: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .shap-container {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+        margin-left: 1rem;
+    }
+
+    .shap-title {
+        text-align: center;
+        color: #2d3748;
+        font-weight: 600;
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .probability-label {
+        text-align: center;
+        margin-top: -20px;
+        color: #64748b;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .recommendation-section {
+        background: linear-gradient(135deg, #f1f5f9 0%, #ffffff 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin: 2rem 0;
+        border: 1px solid #e2e8f0;
+    }
+
+    .recommendation-header {
+        text-align: center;
+        color: #2d3748;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .enhanced-recommendation-card {
+        background: white;
+        padding: 2rem;
+        margin: 1rem 0;
+        border-radius: 15px;
+        border-left: 5px solid #667eea;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .enhanced-recommendation-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(102,126,234,0.02) 0%, rgba(118,75,162,0.02) 100%);
+        pointer-events: none;
+    }
+
+    .enhanced-recommendation-card:hover {
+        transform: translateY(-5px);
+        border-left-color: #764ba2;
+    }
+
+    .recommendation-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .recommendation-subtitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }           
+    .recommendation-content {
+        color: #4a5568;
+        line-height: 1.7;
+        font-size: 15px;
+    }
+
+    .low-risk-message {
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        border: 1px solid #e2e8f0;
+        margin-left: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .success-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .success-title {
+        color: #2d3748;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .success-message {
+        color: #64748b;
+        font-size: 16px;
+        line-height: 1.6;
+        max-width: 400px;
+    }
+
+    .divider-custom {
+        height: 2px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 1px;
+        margin: 3rem 0;
+        opacity: 0.3;
+    }
+
+    .footer-section {
+        text-align: center;
+        color: #64748b;
+        padding: 3rem 2rem;
+        background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+        border-radius: 20px;
+        margin: 2rem 0;
+        border: 1px solid #e2e8f0;
+    }
+
+    .footer-content {
+        font-size: 16px;
+        font-weight: 500;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # ========================
-# Load model & transformer
+# MODEL LOADING FUNCTION
 # ========================
 @st.cache_resource
 def load_models():
+    """
+    Load the trained CatBoost model and preprocessing transformers.
+    
+    Returns:
+        tuple: (model, transformer, ordinal_encoder) if successful, (None, None, None) if failed
+    """
     try:
+        # Load CatBoost model
         model = CatBoostClassifier()
         model.load_model("models/catboost_simplified_model.cbm")
+        
+        # Load preprocessing transformers
         transformer = joblib.load('models/transformer.pkl')
         ordinal_encoder = joblib.load('models/ordinal_encoder.pkl')
+        
         return model, transformer, ordinal_encoder
     except:
         return None, None, None
 
+# Load models and transformers
 model, transformer, ordinal_encoder = load_models()
 
+# ========================
+# DATA CONFIGURATION
+# ========================
 
-# ========================
-# Data Configuration
-# ========================
+# Selected numerical columns for model input
 selected_num_cols = [
     'Age', 'DistanceFromHome', 'MonthlyIncome', 'NumCompaniesWorked',
     'PercentSalaryHike', 'TotalWorkingYears', 'TrainingTimesLastYear',
@@ -283,15 +552,18 @@ selected_num_cols = [
     'AvgWorkHours', 'OverTime'
 ]
 
+# Selected ordinal columns for model input
 selected_ordinal_cols = [
     'WorkLifeBalance', 'JobSatisfaction', 'EnvironmentSatisfaction'
 ]
 
+# Selected nominal/categorical columns for model input
 selected_nominal_cols = [
     'BusinessTravel', 'Department', 'EducationField',
     'Gender', 'JobRole', 'MaritalStatus'
 ]
 
+# Expected one-hot encoded columns after preprocessing
 expected_ohe_columns = [
     'BusinessTravel_Travel_Frequently', 'BusinessTravel_Travel_Rarely',
     'Department_Research & Development', 'Department_Sales',
@@ -305,7 +577,7 @@ expected_ohe_columns = [
     'MaritalStatus_Married', 'MaritalStatus_Single'
 ]
 
-# Default values and options
+# Default median values for numerical features
 median_dict = {
     "Age": 36.0, "DistanceFromHome": 7.0, "MonthlyIncome": 48980.0,
     "NumCompaniesWorked": 2.0, "PercentSalaryHike": 14.0,
@@ -314,6 +586,7 @@ median_dict = {
     "YearsWithCurrManager": 3.0, "AvgWorkHours": 7.4, "OverTime": 0.0
 }
 
+# Default mode values for categorical and ordinal features
 modus_dict = {
     "BusinessTravel": "Travel_Rarely", "Department": "Research & Development",
     "EducationField": "Life Sciences", "Gender": "Male",
@@ -321,12 +594,14 @@ modus_dict = {
     "WorkLifeBalance": 3.0, "JobSatisfaction": 4.0, "EnvironmentSatisfaction": 3.0
 }
 
+# Bounds for certain features (likely used for validation or scaling)
 bounds = {
     'TotalWorkingYears': [-2.47, 2.54],
     'TrainingTimesLastYear': [-1.79, 1.41],
     'YearsAtCompany': [-2.43, 2.49],
 }
 
+# Available options for nominal/categorical features
 nominal_options = {
     "BusinessTravel": ["Travel_Rarely", "Travel_Frequently", "Non-Travel"],
     "Department": ["Research & Development", "Sales", "Human Resources"],
@@ -338,22 +613,29 @@ nominal_options = {
     "MaritalStatus": ["Single", "Married", "Divorced"]
 }
 
+# Available options for ordinal features (satisfaction scales)
 ordinal_options = {
     "WorkLifeBalance": [1, 2, 3, 4],
     "JobSatisfaction": [1, 2, 3, 4],
     "EnvironmentSatisfaction": [1, 2, 3, 4]
 }
 
+# ========================
+# STREAMLIT UI COMPONENTS
+# ========================
+
 # Header
+# Create the main title and subtitle for the resignation prediction application
 st.markdown("""
 <div>
     <h1 style="color: black; margin: 0; text-align: center;">Individual Resignation Prediction</h1>
-    <p style="color: black; margin: 0; opacity: 0.9; text-align: center;">Personalized Attrition Risk Assessment — Predict an Employee’s Likelihood to Resign</p>
+    <p style="color: black; margin: 0; opacity: 0.9; text-align: center;">Personalized Attrition Risk Assessment — Predict an Employee's Likelihood to Resign</p>
 </div>
 """, unsafe_allow_html=True)
 st.markdown("---")
 
 # Check if models are loaded
+# Verify that all required machine learning models are properly loaded before proceeding
 if not all([model, transformer, ordinal_encoder]):
     st.markdown("""
     <div class="prediction-card-high">
@@ -370,6 +652,7 @@ if not all([model, transformer, ordinal_encoder]):
     st.stop()
 
 # Input form section
+# Create the main container for employee information input
 st.markdown("""
     <div class="prediction-container">
         <h3 class="results-header">
@@ -379,339 +662,147 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # Create input form
+# Initialize dictionary to store all input data from the user
 input_data = {}
 
 # Personal Information
+# Section for collecting basic personal details of the employee
 with st.container():
     st.markdown("""
     <div class="input-group">
         <h4><i class="fa-solid fa-user"></i>Personal Information</h4>
     """, unsafe_allow_html=True)
     
+    # Create 4 columns for personal information inputs
     col1, col2, col3, col4 = st.columns(4)
     with col1:
+        # Age input with validation range
         input_data['Age'] = st.number_input("Age", min_value=18, max_value=65, value=36)
     with col2:
+        # Gender selection from predefined options
         input_data['Gender'] = st.selectbox("Gender", nominal_options['Gender'])
     with col3:
+        # Marital status selection
         input_data['MaritalStatus'] = st.selectbox("Marital Status", nominal_options['MaritalStatus'])
     with col4:
+        # Distance from home in kilometers
         input_data['DistanceFromHome'] = st.number_input("Distance From Home (km)", min_value=0, max_value=50, value=7)
     
     st.markdown("</div>", unsafe_allow_html=True)
 
 # Work Information
+# Section for collecting work-related information
 with st.container():
     st.markdown("""
     <div class="input-group">
         <h4><i class="fa-solid fa-briefcase"></i>Work Information</h4>
     """, unsafe_allow_html=True)
     
+    # Create 4 columns for work information inputs
     col1, col2, col3, col4 = st.columns(4)
     with col1:
+        # Department selection
         input_data['Department'] = st.selectbox("Department", nominal_options['Department'])
     with col2:
+        # Job role selection
         input_data['JobRole'] = st.selectbox("Job Role", nominal_options['JobRole'])
     with col3:
+        # Education field selection
         input_data['EducationField'] = st.selectbox("Education Field", nominal_options['EducationField'])
     with col4:
+        # Business travel frequency
         input_data['BusinessTravel'] = st.selectbox("Business Travel", nominal_options['BusinessTravel'])
     
     st.markdown("</div>", unsafe_allow_html=True)
 
 # Experience & Career
+# Section for collecting career progression and experience data
 with st.container():
     st.markdown("""
     <div class="input-group">
         <h4><i class="fa-solid fa-chart-simple"></i>Experience & Career</h4>
     """, unsafe_allow_html=True)
     
+    # Create 3 columns for experience inputs
     col1, col2, col3 = st.columns(3)
     with col1:
+        # Total working years across all companies
         input_data['TotalWorkingYears'] = st.number_input("Total Working Years", min_value=0, max_value=40, value=10)
+        # Years with current manager
         input_data['YearsWithCurrManager'] = st.number_input("Years with Current Manager", min_value=0, max_value=20, value=3)
     with col2:
+        # Years at current company
         input_data['YearsAtCompany'] = st.number_input("Years at Company", min_value=0, max_value=40, value=5)
+        # Number of companies worked at previously
         input_data['NumCompaniesWorked'] = st.number_input("Number of Companies Worked", min_value=0, max_value=10, value=2)
     with col3:
+        # Years since last promotion
         input_data['YearsSinceLastPromotion'] = st.number_input("Years Since Last Promotion", min_value=0, max_value=20, value=1)
+        # Training frequency in the last year
         input_data['TrainingTimesLastYear'] = st.number_input("Training Times Last Year", min_value=0, max_value=10, value=3)
     
     st.markdown("</div>", unsafe_allow_html=True)
 
 # Compensation & Work
+# Section for collecting salary and work-related metrics
 with st.container():
     st.markdown("""
     <div class="input-group">
         <h4><i class="fa-solid fa-money-check-dollar"></i>Compensation & Work</h4>
     """, unsafe_allow_html=True)
     
+    # Create 4 columns for compensation inputs
     col1, col2, col3, col4 = st.columns(4)
     with col1:
+        # Monthly income in local currency
         input_data['MonthlyIncome'] = st.number_input("Monthly Income", min_value=0, max_value=200000, value=48980)
     with col2:
+        # Percentage salary increase
         input_data['PercentSalaryHike'] = st.number_input("Percent Salary Hike (%)", min_value=0, max_value=50, value=14)
     with col3:
+        # Average daily work hours
         input_data['AvgWorkHours'] = st.number_input("Average Work Hours per Day", min_value=1.0, max_value=12.0, value=7.4, step=0.1)
     with col4:
+        # Number of overtime days per year
         input_data['OverTime'] = st.number_input("Over Time Days", min_value=0, max_value=365, value=0, step=1)
     
     st.markdown("</div>", unsafe_allow_html=True)
 
 # Satisfaction Levels
+# Section for collecting employee satisfaction ratings
 with st.container():
     st.markdown("""
     <div class="input-group">
         <h4><i class="fa-solid fa-face-smile"></i>Satisfaction Levels</h4>
     """, unsafe_allow_html=True)
     
+    # Create 3 columns for satisfaction inputs
     col1, col2, col3 = st.columns(3)
     with col1:
+        # Work-life balance rating (1-4 scale)
         input_data['WorkLifeBalance'] = st.selectbox("Work Life Balance (1-4)", ordinal_options['WorkLifeBalance'])
     with col2:
+        # Job satisfaction rating (1-4 scale)
         input_data['JobSatisfaction'] = st.selectbox("Job Satisfaction (1-4)", ordinal_options['JobSatisfaction'])
     with col3:
+        # Environment satisfaction rating (1-4 scale)
         input_data['EnvironmentSatisfaction'] = st.selectbox("Environment Satisfaction (1-4)", ordinal_options['EnvironmentSatisfaction'])
     
     st.markdown("</div>", unsafe_allow_html=True)
 
 # Predict button
+# Create the prediction button centered on the page
 st.markdown("<br>", unsafe_allow_html=True)
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
+    # Main prediction button that triggers the model inference
     predict_button = st.button("Predict Resignation Risk", key="predict_btn")
 
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Add some space at the bottom
+# Add visual separator at the bottom of the form
 st.markdown('<hr class="divider-custom">', unsafe_allow_html=True)
-
-# Enhanced Prediction Results Section
-# Add this CSS for additional styling
-st.markdown("""
-<style>
-.prediction-container {
-    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
-    border-radius: 25px;
-    padding: 2.5rem;
-    margin: 2rem 0;
-    border: 1px solid rgba(102,126,234,0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-.prediction-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.results-header {
-    text-align: center;
-    color: #2d3748;
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.gauge-container {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    border: 1px solid #e2e8f0;
-    position: relative;
-}
-
-.risk-badge-high {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 25px;
-    font-weight: 700;
-    font-size: 18px;
-    display: inline-block;
-    margin-top: 15px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.risk-badge-low {
-    background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 25px;
-    font-weight: 700;
-    font-size: 18px;
-    display: inline-block;
-    margin-top: 15px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.shap-container {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    border: 1px solid #e2e8f0;
-    margin-left: 1rem;
-}
-
-.shap-title {
-    text-align: center;
-    color: #2d3748;
-    font-weight: 600;
-    font-size: 1.4rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.probability-label {
-    text-align: center;
-    margin-top: -20px;
-    color: #64748b;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.recommendation-section {
-    background: linear-gradient(135deg, #f1f5f9 0%, #ffffff 100%);
-    border-radius: 20px;
-    padding: 2.5rem;
-    margin: 2rem 0;
-    border: 1px solid #e2e8f0;
-}
-
-.recommendation-header {
-    text-align: center;
-    color: #2d3748;
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.enhanced-recommendation-card {
-    background: white;
-    padding: 2rem;
-    margin: 1rem 0;
-    border-radius: 15px;
-    border-left: 5px solid #667eea;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.enhanced-recommendation-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(102,126,234,0.02) 0%, rgba(118,75,162,0.02) 100%);
-    pointer-events: none;
-}
-
-.enhanced-recommendation-card:hover {
-    transform: translateY(-5px);
-    border-left-color: #764ba2;
-}
-
-.recommendation-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-.recommendation-subtitle {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}           
-.recommendation-content {
-    color: #4a5568;
-    line-height: 1.7;
-    font-size: 15px;
-}
-
-.low-risk-message {
-    background: white;
-    border-radius: 20px;
-    padding: 3rem;
-    border: 1px solid #e2e8f0;
-    margin-left: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.success-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-}
-
-.success-title {
-    color: #2d3748;
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.success-message {
-    color: #64748b;
-    font-size: 16px;
-    line-height: 1.6;
-    max-width: 400px;
-}
-
-.divider-custom {
-    height: 2px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    border-radius: 1px;
-    margin: 3rem 0;
-    opacity: 0.3;
-}
-
-.footer-section {
-    text-align: center;
-    color: #64748b;
-    padding: 3rem 2rem;
-    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
-    border-radius: 20px;
-    margin: 2rem 0;
-    border: 1px solid #e2e8f0;
-}
-
-.footer-content {
-    font-size: 16px;
-    font-weight: 500;
-}
-</style>
-""", unsafe_allow_html=True)
 
 # Main content
 if not predict_button:

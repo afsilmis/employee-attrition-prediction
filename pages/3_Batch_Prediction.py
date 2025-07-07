@@ -8,18 +8,18 @@ import io
 import plotly.express as px
 import random
 
-# Load Font Awesome
+# Load Font Awesome for icons
 st.markdown("""
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 """, unsafe_allow_html=True)
 
-# Load models dan artifacts
+# Load pre-trained models and preprocessing artifacts
 model = CatBoostClassifier()
 model.load_model("models/catboost_simplified_model.cbm")
 transformer = joblib.load('models/transformer.pkl')
 ordinal_encoder = joblib.load('models/ordinal_encoder.pkl')
 
-# Parameter preprocessing
+# Define feature columns used in preprocessing
 selected_num_cols = [
     'Age', 'DistanceFromHome', 'MonthlyIncome', 'NumCompaniesWorked',
     'PercentSalaryHike', 'TotalWorkingYears', 'TrainingTimesLastYear',
@@ -36,6 +36,7 @@ selected_nominal_cols = [
     'Gender', 'JobRole', 'MaritalStatus'
 ]
 
+# Expected one-hot encoded columns after preprocessing
 expected_ohe_columns = [
     'BusinessTravel_Travel_Frequently', 'BusinessTravel_Travel_Rarely',
     'Department_Research & Development', 'Department_Sales',
@@ -49,7 +50,7 @@ expected_ohe_columns = [
     'MaritalStatus_Married', 'MaritalStatus_Single'
 ]
 
-# Default values and options
+# Default values for missing data imputation
 median_dict = {
     "Age": 36.0, "DistanceFromHome": 7.0, "MonthlyIncome": 48980.0,
     "NumCompaniesWorked": 2.0, "PercentSalaryHike": 14.0,
@@ -65,12 +66,14 @@ modus_dict = {
     "WorkLifeBalance": 3.0, "JobSatisfaction": 4.0, "EnvironmentSatisfaction": 3.0
 }
 
+# Bounds for specific numerical features (after scaling)
 bounds = {
     'TotalWorkingYears': [-2.47, 2.54],
     'TrainingTimesLastYear': [-1.79, 1.41],
     'YearsAtCompany': [-2.43, 2.49],
 }
 
+# Valid options for categorical features
 nominal_options = {
     "BusinessTravel": ["Travel_Rarely", "Travel_Frequently", "Non-Travel"],
     "Department": ["Research & Development", "Sales", "Human Resources"],
@@ -88,9 +91,10 @@ ordinal_options = {
     "EnvironmentSatisfaction": [1, 2, 3, 4]
 }
 
+# Prediction threshold for binary classification
 threshold = 0.73
 
-# Header
+# App header
 st.markdown("""
 <div>
     <h1 style="color: black; margin: 0; text-align: center;">Batch Resignation Prediction</h1>
@@ -99,25 +103,26 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown("---")
 
-import pandas as pd
-import streamlit as st
-
+# File upload section
 uploaded_file = st.file_uploader("Upload file", type=['xlsx', 'xls', 'csv'])
 
-# === Show Dummy Template ===
+# Generate and display dummy template
 st.markdown("### <i class='fa-solid fa-file-excel'></i> Excel Template", unsafe_allow_html=True)
 
 num_rows = 3
 dummy_data = {}
 
+# Generate dummy numerical data
 for col in selected_num_cols:
     median = median_dict.get(col, 0)
     dummy_data[col] = [median + i for i in range(num_rows)]
 
+# Generate dummy ordinal data
 for col in selected_ordinal_cols:
     modus = modus_dict.get(col, 1)
     dummy_data[col] = [modus + i for i in range(num_rows)]
 
+# Generate dummy nominal data
 for col in selected_nominal_cols:
     options = nominal_options.get(col, [''])
     row_values = []
@@ -131,7 +136,7 @@ for col in selected_nominal_cols:
 df_dummy = pd.DataFrame(dummy_data)
 st.dataframe(df_dummy)
 
-# Tombol download template
+# Create downloadable Excel template
 output_dummy = io.BytesIO()
 with pd.ExcelWriter(output_dummy, engine='xlsxwriter') as writer:
     df_dummy.to_excel(writer, index=False, sheet_name='Template')
@@ -145,8 +150,9 @@ st.download_button(
     mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 )
 
+# Process uploaded file
 if uploaded_file is not None:
-    # Tentukan jenis file berdasarkan ekstensi
+    # Load data based on file type
     if uploaded_file.name.endswith('.csv'):
         df_input = pd.read_csv(uploaded_file)
     else:
@@ -155,63 +161,44 @@ if uploaded_file is not None:
     st.markdown("### <i class='fa-solid fa-table'></i> Data Preview", unsafe_allow_html=True)
     st.dataframe(df_input.head())
 
-
-    # === Preprocessing ===
+    # === DATA PREPROCESSING ===
     df = df_input.copy()
 
-    # Convert numeric columns
+    # Convert numeric columns to proper data types
     for col in selected_num_cols:
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    # Fill missing values
+    # Fill missing values with median/mode
     for col in selected_num_cols:
         df[col].fillna(median_dict[col], inplace=True)
     for col in selected_ordinal_cols + selected_nominal_cols:
         df[col].fillna(modus_dict[col], inplace=True)
 
-    # Apply bounds
+    # Apply bounds to prevent out-of-range values
     for col in bounds.keys():
         lower, upper = bounds[col]
         df[col] = np.clip(df[col], lower, upper)
 
-    # Transform features
+    # Transform features using pre-trained transformers
     X_num = transformer.transform(df[selected_num_cols])
     X_ord = ordinal_encoder.transform(df[selected_ordinal_cols])
     X_nom = pd.get_dummies(df[selected_nominal_cols])
+    
+    # Ensure all expected one-hot encoded columns are present
     for col in expected_ohe_columns:
         if col not in X_nom.columns:
             X_nom[col] = 0
     X_nom = X_nom[expected_ohe_columns]
 
+    # Combine all features
     X_all = np.concatenate([X_num, X_ord, X_nom.values], axis=1)
 
-    # Predict probabilities
+    # Make predictions
     probabilities = model.predict_proba(X_all)
     proba_resign = probabilities[:, 1]
     predictions = (proba_resign >= threshold).astype(int)
 
-    # SHAP values
-    explainer = shap.TreeExplainer(model)
-    shap_values = explainer.shap_values(X_all)
-    shap_values_pos = shap_values[1] if isinstance(shap_values, list) else shap_values
-
-    # Buat DataFrame hasil
-    result_df = df_input.copy()
-    result_df['probability_resign'] = proba_resign
-    result_df['prediction'] = predictions
-
-    # Tambah top 3 features per baris
-    top_features = []
-    for i in range(len(df)):
-        shap_df = pd.DataFrame({
-            'feature': selected_num_cols + selected_ordinal_cols + expected_ohe_columns,
-            'shap_value': shap_values_pos[i].flatten()
-        })
-        top3 = shap_df[shap_df['shap_value'] > 0].sort_values('shap_value', ascending=False).head(3)
-        top_features.append(', '.join(top3['feature'].tolist()))
-    result_df['top_3_features'] = top_features
-  
-    # SHAP values
+    # Calculate SHAP values for feature importance
     explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(X_all)
     shap_values_pos = shap_values[1] if isinstance(shap_values, list) else shap_values
@@ -221,7 +208,7 @@ if uploaded_file is not None:
     result_df['probability_resign'] = proba_resign
     result_df['prediction'] = predictions
     
-    # Add top 3 features per row
+    # Add top 3 contributing features per employee
     feature_names = selected_num_cols + selected_ordinal_cols + expected_ohe_columns
     top_features = []
     for i in range(len(df)):
@@ -238,19 +225,20 @@ if uploaded_file is not None:
     st.write("---")
     st.markdown("### <i class='fa-solid fa-chart-simple'></i> Prediction Analytics", unsafe_allow_html=True)
     
-    # Create tabs for better organization
+    # Create tabs for organized display
     tab1, tab2, tab3 = st.tabs(["Overview", "Feature Insights", "Results"])
     
     with tab1:
         st.write("### Prediction Summary")
         
-        # Key metrics in columns
-        col1, col2, col3, col4 = st.columns(4)
-        
+        # Calculate key metrics
         total_employees = len(result_df)
         resign_count = sum(result_df['prediction'])
         stay_count = total_employees - resign_count
         avg_probability = result_df['probability_resign'].mean()
+        
+        # Display metrics in columns
+        col1, col2, col3, col4 = st.columns(4)
         
         with col1:
             st.metric("Total Employees", total_employees)
@@ -264,7 +252,7 @@ if uploaded_file is not None:
             st.metric("Avg. Resign Probability", f"{avg_probability:.2f}",
                      delta=f"{(avg_probability-0.5)*100:+.1f}% vs baseline")
         
-        # Visualization row
+        # Create visualizations
         col1, col2 = st.columns(2)
         
         with col1:
@@ -280,7 +268,7 @@ if uploaded_file is not None:
             st.plotly_chart(fig_pie, use_container_width=True)
         
         with col2:
-            # Histogram of probabilities
+            # Histogram of resignation probabilities
             fig_hist = px.histogram(
                 result_df, 
                 x='probability_resign',
@@ -295,7 +283,7 @@ if uploaded_file is not None:
             st.plotly_chart(fig_hist, use_container_width=True)
     
     with tab2:        
-        # Global feature importance
+        # Calculate global feature importance
         feature_importance = np.abs(shap_values_pos).mean(axis=0)
         importance_df = pd.DataFrame({
             'feature': feature_names,
@@ -321,12 +309,13 @@ if uploaded_file is not None:
             st.plotly_chart(fig_feat, use_container_width=True)
         
         with col2:
+            # Display feature ranking as text
             text = "##### Feature Ranking\n"
             for i, (_, row) in enumerate(importance_df.head(10).iterrows()):
                 text += f"{i+1}. {row['feature']}\n"
             st.markdown(text)
         
-        # Most common contributing factors
+        # Most frequently contributing features across all employees
         all_features = []
         for features_str in result_df['top_3_features']:
             if features_str:  # Check if not empty
@@ -368,7 +357,7 @@ if uploaded_file is not None:
                 step=0.1
             )
         
-        # Apply filters
+        # Apply filters to results
         filtered_df = result_df.copy()
                 
         if prediction_filter != "All":
@@ -409,13 +398,13 @@ if uploaded_file is not None:
         col1, col2 = st.columns(2)
         
         with col1:
-            # Excel download
+            # Excel download with complete results
             output = io.BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                # Main results
+                # Main results sheet
                 result_df.to_excel(writer, index=False, sheet_name='Predictions')
                 
-                # Summary statistics
+                # Summary statistics sheet
                 summary_stats = pd.DataFrame({
                     'Metric': ['Total Employees', 'Predicted to Resign', 'Predicted to Stay', 
                               'Average Resign Probability', 'High Risk (≥70%)', 'Very High Risk (≥80%)'],
@@ -436,10 +425,11 @@ if uploaded_file is not None:
             )
         
         with col2:
+            # CSV download with filtered results
             filtered_data = filtered_df.to_csv(index=False)
             st.download_button(
-                label="Download Filtered Results (Excel)",
+                label="Download Filtered Results (CSV)",
                 data=filtered_data,
-                file_name=f'filtered_predictions_{pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")}.xlsx',
-                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                file_name=f'filtered_predictions_{pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")}.csv',
+                mime='text/csv'
             )

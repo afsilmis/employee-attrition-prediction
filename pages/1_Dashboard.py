@@ -298,7 +298,7 @@ with col3:
     st.metric(
         label="Attrited", 
         value=f"{attrited_employees}",
-        delta=f"{attrited_employees - 237}" if attrited_employees != 237 else None
+        delta=f"{attrited_employees - 237}" if attrited_employees != 711 else None
     )
 
 # Column 4: Display average tenure with comparison to baseline

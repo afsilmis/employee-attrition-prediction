@@ -239,18 +239,23 @@ if uploaded_file is not None:
         
         # Display metrics in columns
         col1, col2, col3, col4 = st.columns(4)
+        baseline_rate = 16.1
         
         with col1:
             st.metric("Total Employees", total_employees)
+            
         with col2:
-            st.metric("Predicted to Resign", resign_count, 
-                     delta=f"{resign_count/total_employees*100:.1f}%")
+            resign_rate = resign_count / total_employees * 100
+            st.metric("Predicted to Resign", resign_count,
+                      delta=f"{resign_rate - baseline_rate:.1f}%")
+        
         with col3:
+            stay_rate = stay_count / total_employees * 100
             st.metric("Predicted to Stay", stay_count,
-                     delta=f"{stay_count/total_employees*100:.1f}%")
+                      delta=f"{stay_rate - (100 - baseline_rate):.1f}%")
+            
         with col4:
-            st.metric("Avg. Resign Probability", f"{avg_probability:.2f}",
-                     delta=f"{(avg_probability-0.161)*100:+.1f}%")
+            st.metric("Avg. Resign Probability", f"{avg_probability:.2f}")
         
         # Create visualizations
         col1, col2 = st.columns(2)

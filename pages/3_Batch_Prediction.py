@@ -250,7 +250,7 @@ if uploaded_file is not None:
                      delta=f"{stay_count/total_employees*100:.1f}%")
         with col4:
             st.metric("Avg. Resign Probability", f"{avg_probability:.2f}",
-                     delta=f"{(avg_probability-0.5)*100:+.1f}% vs baseline")
+                     delta=f"{(avg_probability-0.161)*100:+.1f}%")
         
         # Create visualizations
         col1, col2 = st.columns(2)

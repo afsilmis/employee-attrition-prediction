@@ -109,29 +109,43 @@ uploaded_file = st.file_uploader("Upload file", type=['xlsx', 'xls', 'csv'])
 # Generate and display dummy template
 st.markdown("### <i class='fa-solid fa-file-excel'></i> Excel Template", unsafe_allow_html=True)
 
-num_rows = 3
+num_rows = 6  
 dummy_data = {}
 
-# Generate dummy numerical data
-for col in selected_num_cols:
-    median = median_dict.get(col, 0)
-    dummy_data[col] = [median + i for i in range(num_rows)]
+dummy_data['EmployeeID'] = [100, 101, 102, 103, 104, 105]
+dummy_data['Age'] = [34, 28, 45, 33, 29, 52]
+dummy_data['DistanceFromHome'] = [8, 15, 3, 12, 22, 5]
+dummy_data['Education'] = [3, 2, 4, 3, 1, 4]
+dummy_data['JobLevel'] = [2, 1, 3, 2, 1, 4]
+dummy_data['MonthlyIncome'] = [85420, 45200, 92800, 58900, 38750, 118600]
+dummy_data['NumCompaniesWorked'] = [2, 1, 3, 1, 0, 4]
+dummy_data['PercentSalaryHike'] = [14, 18, 12, 16, 21, 13]
+dummy_data['StockOptionLevel'] = [1, 0, 2, 1, 0, 3]
+dummy_data['TotalWorkingYears'] = [12, 5, 18, 9, 4, 25]
+dummy_data['TrainingTimesLastYear'] = [3, 2, 4, 3, 2, 5]
+dummy_data['YearsAtCompany'] = [8, 3, 15, 7, 2, 22]
+dummy_data['YearsSinceLastPromotion'] = [2, 1, 5, 1, 0, 8]
+dummy_data['YearsWithCurrManager'] = [3, 2, 8, 4, 1, 12]
+dummy_data['EnvironmentSatisfaction'] = [3, 2, 4, 3, 2, 4]
+dummy_data['JobSatisfaction'] = [3, 3, 4, 3, 2, 4]
+dummy_data['WorkLifeBalance'] = [4, 3, 4, 3, 2, 3]
+dummy_data['JobInvolvement'] = [3, 2, 2, 3, 2, 3]
+dummy_data['PerformanceRating'] = [3, 4, 3, 3, 4, 3]
+dummy_data['AvgWorkHours'] = [7.523894561, 8.145672389, 7.892456123, 7.634521987, 6.847293156, 8.756342891]
+dummy_data['AbsentDays'] = [22, 28, 18, 25, 31, 16]
+dummy_data['OverTime'] = [45, 12, 78, 23, 8, 156]
 
-# Generate dummy ordinal data
-for col in selected_ordinal_cols:
-    modus = modus_dict.get(col, 1)
-    dummy_data[col] = [modus + i for i in range(num_rows)]
-
-# Generate dummy nominal data
-for col in selected_nominal_cols:
-    options = nominal_options.get(col, [''])
-    row_values = []
-    for i in range(num_rows):
-        if len(options) > i:
-            row_values.append(options[i])
-        else:
-            row_values.append(random.choice(options))
-    dummy_data[col] = row_values
+dummy_data['Attrition'] = ["No", "Yes", "No", "No", "Yes", "No"]
+dummy_data['BusinessTravel'] = ["Travel_Rarely", "Travel_Frequently", "Non-Travel",
+                                "Travel_Rarely", "Travel_Frequently", "Travel_Rarely"]
+dummy_data['Department'] = ["Sales", "Research & Development", "Human Resources",
+                            "Research & Development", "Sales", "Research & Development"]
+dummy_data['EducationField'] = ["Business", "Life Sciences", "Human Resources",
+                                "Medical", "Marketing", "Life Sciences"]
+dummy_data['Gender'] = ["Male", "Female", "Female", "Male", "Female", "Male"]
+dummy_data['JobRole'] = ["Sales Executive", "Research Scientist", "HR Manager",
+                         "Laboratory Technician", "Sales Representative", "Research Director"]
+dummy_data['MaritalStatus'] = ["Married", "Single", "Married", "Divorced", "Single", "Married"]
 
 df_dummy = pd.DataFrame(dummy_data)
 st.dataframe(df_dummy)

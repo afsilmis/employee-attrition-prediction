@@ -276,17 +276,20 @@ if uploaded_file is not None:
         result_df['prediction_label'] = result_df['prediction'].map({0: 'Stay', 1: 'Resign'})
                 
         with col1:
-            # Pie chart untuk distribusi prediksi
-            pred_counts = result_df['prediction_label'].value_counts()
-            fig_pie = px.pie(
-                values=pred_counts.values,
-                names=pred_counts.index,  # Gunakan index, jangan hardcode!
-                title="Prediction Distribution",
-                color_discrete_map={'Stay': 'lightgrey', 'Resign': '#e74c3c'}
-            )
-            fig_pie.update_layout(height=400)
-            st.plotly_chart(fig_pie, use_container_width=True)
+            # Create a DataFrame from prediction counts for easier plotting
+            pred_counts_df = result_df['prediction_label'].value_counts().reset_index()
+            pred_counts_df.columns = ['prediction_label', 'count'] # Rename columns
         
+            # Pie chart for prediction distribution
+            fig_pie = px.pie(
+                    pred_counts_df,
+                    values='count',
+                    names='prediction_label',
+                    title="Prediction Distribution",
+                    color='prediction_label',
+                    color_discrete_map={'Stay': 'lightgrey', 'Resign': '#e74c3c'}
+                )
+            
         with col2:
             # Histogram of resignation probabilities with color by prediction label
             fig_hist = px.histogram(

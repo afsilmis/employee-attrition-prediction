@@ -281,25 +281,52 @@ if uploaded_file is not None:
                 values=pred_counts.values,
                 names=['Stay', 'Resign'],
                 title="Prediction Distribution",
-                color_discrete_map={'Stay': '#2E8B57', 'Resign': '#DC143C'}
+                color_discrete_map={'Stay': 'lightgrey', 'Resign': '#e74c3c'}
             )
             fig_pie.update_layout(height=400)
             st.plotly_chart(fig_pie, use_container_width=True)
-        
+
         with col2:
-            # Histogram of resignation probabilities
+            # Histogram of resignation probabilities with color by prediction
             fig_hist = px.histogram(
                 result_df, 
                 x='probability_resign',
                 nbins=20,
+                color='prediction',  # Warna berdasarkan label prediksi
                 title="Distribution of Resignation Probabilities",
-                labels={'probability_resign': 'Probability of Resignation', 'count': 'Number of Employees'},
-                color_discrete_sequence=['#4CAF50']
+                labels={
+                    'probability_resign': 'Probability of Resignation',
+                    'count': 'Number of Employees',
+                    'prediction': 'Prediction'
+                },
+                color_discrete_map={
+                    'Stay': 'lightgrey',
+                    'Resign': '#e74c3c'
+                }
             )
-            fig_hist.add_vline(x=threshold, line_dash="dash", line_color="red", 
-                              annotation_text=f"Threshold: {threshold}")
+            fig_hist.add_vline(
+                x=threshold, 
+                line_dash="dash", 
+                line_color="red",
+                annotation_text=f"Threshold: {threshold}"
+            )
             fig_hist.update_layout(height=400)
             st.plotly_chart(fig_hist, use_container_width=True)
+
+        # with col2:
+        #     # Histogram of resignation probabilities
+        #     fig_hist = px.histogram(
+        #         result_df, 
+        #         x='probability_resign',
+        #         nbins=20,
+        #         title="Distribution of Resignation Probabilities",
+        #         labels={'probability_resign': 'Probability of Resignation', 'count': 'Number of Employees'},
+        #         color_discrete_sequence=['#4CAF50']
+        #     )
+        #     fig_hist.add_vline(x=threshold, line_dash="dash", line_color="red", 
+        #                       annotation_text=f"Threshold: {threshold}")
+        #     fig_hist.update_layout(height=400)
+        #     st.plotly_chart(fig_hist, use_container_width=True)
     
     with tab2:        
         # Calculate global feature importance

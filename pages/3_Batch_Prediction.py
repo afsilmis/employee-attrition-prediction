@@ -409,6 +409,15 @@ if uploaded_file is not None:
         display_cols = ['probability_resign', 'prediction', 'top_3_features']
         other_cols = [col for col in filtered_df.columns if col not in display_cols]
         final_cols = other_cols + display_cols
+                
+        result_df['prediction_label'] = result_df['prediction'].map({
+            0: 'Low Risk',
+            1: 'High Risk'
+        })
+        
+        display_cols = ['probability_resign', 'prediction_label', 'top_3_features']
+        other_cols = [col for col in filtered_df.columns if col not in ['prediction', 'prediction_label', 'probability_resign', 'top_3_features']]
+        final_cols = other_cols + display_cols
         
         st.dataframe(
             filtered_df[final_cols],
@@ -418,54 +427,40 @@ if uploaded_file is not None:
                     'Resign Probability',
                     format="%.3f"
                 ),
-                'prediction': st.column_config.TextColumn(
-                    'Prediction',
-                    help="0 = Stay, 1 = Resign"
+                'prediction_label': st.column_config.TextColumn(
+                    'Risk Level',
+                    help="Low Risk = Unlikely to resign, High Risk = Likely to resign"
                 ),
                 'top_3_features': st.column_config.TextColumn(
                     'Top Contributing Factors'
                 )
             }
-        )
+        )        
         
         # Download section
         st.write("#### Download Results")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            # Excel download with complete results
-            output = io.BytesIO()
-            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                # Main results sheet
-                result_df.to_excel(writer, index=False, sheet_name='Predictions')
+        # Excel download with complete results
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            # Main results sheet
+            result_df.to_excel(writer, index=False, sheet_name='Predictions')
                 
-                # Summary statistics sheet
-                summary_stats = pd.DataFrame({
+            # Summary statistics sheet
+            summary_stats = pd.DataFrame({
                     'Metric': ['Total Employees', 'Predicted to Resign', 'Predicted to Stay', 
                               'Average Resign Probability', 'High Risk (≥70%)', 'Very High Risk (≥80%)'],
                     'Value': [total_employees, resign_count, stay_count, 
                              f"{avg_probability:.3f}", 
                              len(result_df[result_df['probability_resign'] >= 0.7]),
                              len(result_df[result_df['probability_resign'] >= 0.8])]
-                })
-                summary_stats.to_excel(writer, index=False, sheet_name='Summary')
+            })
+            summary_stats.to_excel(writer, index=False, sheet_name='Summary')
                 
-            processed_data = output.getvalue()
+        processed_data = output.getvalue()
             
-            st.download_button(
+        st.download_button(
                 label="Download Complete Results (Excel)",
                 data=processed_data,
                 file_name=f'employee_resignation_predictions_{pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")}.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            )
-        
-        with col2:
-            # CSV download with filtered results
-            filtered_data = filtered_df.to_csv(index=False)
-            st.download_button(
-                label="Download Filtered Results (CSV)",
-                data=filtered_data,
-                file_name=f'filtered_predictions_{pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")}.csv',
-                mime='text/csv'
-            )
+        )

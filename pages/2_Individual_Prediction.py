@@ -959,7 +959,7 @@ else:
                 for i, (_, row) in enumerate(top3_df.iterrows(), 1):
                     st.markdown(f"""
                     <div style="margin-left: 20px; margin-bottom: 10px;">
-                        <strong>{i}. {row['feature']}</strong> - Impact Score: {row['shap_value']:.2f}
+                        <strong>{i}. {row['feature']}</strong>
                     </div>
                     """, unsafe_allow_html=True)
 

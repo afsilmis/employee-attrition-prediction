@@ -273,6 +273,7 @@ if uploaded_file is not None:
         
         # Create visualizations
         col1, col2 = st.columns(2)
+        result_df['prediction_label'] = result_df['prediction'].map({0: 'Stay', 1: 'Resign'})
         
         with col1:
             # Pie chart for prediction distribution
@@ -285,9 +286,7 @@ if uploaded_file is not None:
             )
             fig_pie.update_layout(height=400)
             st.plotly_chart(fig_pie, use_container_width=True)
-
-        # Pastikan label prediksi berupa teks
-        result_df['prediction_label'] = result_df['prediction'].map({0: 'Stay', 1: 'Resign'})
+        
         
         with col2:
             # Histogram of resignation probabilities with color by prediction label
@@ -317,22 +316,6 @@ if uploaded_file is not None:
         
             fig_hist.update_layout(height=400)
             st.plotly_chart(fig_hist, use_container_width=True)
-
-
-        # with col2:
-        #     # Histogram of resignation probabilities
-        #     fig_hist = px.histogram(
-        #         result_df, 
-        #         x='probability_resign',
-        #         nbins=20,
-        #         title="Distribution of Resignation Probabilities",
-        #         labels={'probability_resign': 'Probability of Resignation', 'count': 'Number of Employees'},
-        #         color_discrete_sequence=['#4CAF50']
-        #     )
-        #     fig_hist.add_vline(x=threshold, line_dash="dash", line_color="red", 
-        #                       annotation_text=f"Threshold: {threshold}")
-        #     fig_hist.update_layout(height=400)
-        #     st.plotly_chart(fig_hist, use_container_width=True)
     
     with tab2:        
         # Calculate global feature importance

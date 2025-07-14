@@ -110,7 +110,7 @@ st.markdown("""
 st.markdown("---")
 
 # Hero section explaining the app's purpose
-st.markdown('<div class="section-header"><h3><i class="fa-solid fa-brain"></i> What This App Does</h3></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="bi bi-window-stack"></i> What This App Does</h3></div>', unsafe_allow_html=True)
 st.markdown("""
 This dashboard helps HR identify employees at risk of leaving the company using machine learning.
 
@@ -124,7 +124,7 @@ To get started, choose a page below or use the sidebar navigation.
 
 # Section for showing dummy template
 st.markdown("---")
-st.markdown('<div class="section-header"><h3><i class="fa-solid fa-file-excel"></i> Batch Prediction: Excel Template</h3></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="bi bi-file-earmark-spreadsheet"></i> Batch Prediction: Excel Template</h3></div>', unsafe_allow_html=True)
 st.markdown("Use this sample format to prepare your employee data for batch prediction.")
 
 # Generate dummy data for template
@@ -173,7 +173,7 @@ st.download_button(
 
 # Quick actions section with navigation buttons
 st.markdown("---")
-st.markdown('<div class="section-header"><h3><i class="fa-solid fa-location-arrow"></i> Quick Actions</h3></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="bi bi-cursor"></i> Quick Actions</h3></div>', unsafe_allow_html=True)
 
 # Create three columns for navigation buttons
 col1, col2, col3 = st.columns(3)

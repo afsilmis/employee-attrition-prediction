@@ -137,7 +137,7 @@ st.markdown("---")
 uploaded_file = st.file_uploader("Upload Excel file", type=['xlsx', 'xls', 'csv'])
 
 # Display Excel template section
-st.markdown("#### <i class='fa-solid fa-file-excel'></i> Excel Template", unsafe_allow_html=True)
+st.markdown("#### <i class="bi bi-file-earmark-spreadsheet"></i> Excel Template", unsafe_allow_html=True)
 
 # Generate dummy data for template (3 rows of sample data)
 num_rows = 3
@@ -269,7 +269,7 @@ high_performers_attrited = len(filtered_df[(filtered_df['Attrition'] == 'Yes') &
 
 # Executive Summary
 # Display the main header with icon for the executive summary section
-st.markdown('<div class="section-header"><h3><i class="fa-solid fa-clipboard-list"></i> Executive Summary</h3></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="bi bi-card-checklist"></i> Executive Summary</h3></div>', unsafe_allow_html=True)
 
 # Create 5 columns for key metrics display
 col1, col2, col3, col4, col5 = st.columns(5)
@@ -337,7 +337,7 @@ st.markdown("---")
 
 # Demographics & Segmentation
 # Display the demographics section header
-st.markdown('<div class="section-header"><h3><i class="fa-solid fa-id-card-clip"></i> Demographics & Segmentation</h3></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="bi bi-person-gear"></i> Demographics & Segmentation</h3></div>', unsafe_allow_html=True)
 
 # Create 2 columns for the first row of demographic charts
 col1, col2 = st.columns(2)
@@ -518,7 +518,7 @@ st.markdown("---")
 
 # Work Factors & Satisfaction
 # Display the work factors section header
-st.markdown('<div class="section-header"><h3><i class="fa-solid fa-briefcase"></i> Work Factors & Satisfaction</h3></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="bi bi-briefcase"></i> Work Factors & Satisfaction</h3></div>', unsafe_allow_html=True)
 
 # Create 2 columns for work factor charts
 col1, col2 = st.columns(2)
@@ -678,7 +678,7 @@ st.markdown("---")
 
 # Compensation & Performance
 # Display the compensation section header
-st.markdown('<div class="section-header"><h3><i class="fa-solid fa-money-bill-wave"></i> Compensation & Performance</h3></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="bi bi-coin"></i> Compensation & Performance</h3></div>', unsafe_allow_html=True)
 
 # Create 2 columns for compensation charts
 col1, col2 = st.columns(2)
@@ -847,7 +847,7 @@ for i, insight in enumerate(compensation_insights, 1):
 st.markdown("---")
 
 # Heatmap Analysis
-st.markdown('<div class="section-header"><h3><i class="fa-solid fa-building-user"></i> Department & Role Analysis</h3></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="bi bi-building"></i> Department & Role Analysis</h3></div>', unsafe_allow_html=True)
 
 # Create pivot table for heatmap
 # Transform attrition data into a matrix format where rows are job roles and columns are departments
@@ -986,7 +986,7 @@ for i, insight in enumerate(department_insights, 1):
 
 # Dataset Preview
 st.markdown("---")
-st.markdown('<div class="section-header"><h3><i class="fa-solid fa-table-list"></i> Dataset Preview</h3></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="bi bi-database-check"></i> Dataset Preview</h3></div>', unsafe_allow_html=True)
 
 # Expandable filter box
 with st.expander("Filter & Sort Options"):

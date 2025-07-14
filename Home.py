@@ -8,13 +8,10 @@ import random
 # Configure Streamlit page settings
 st.set_page_config(page_title="Welcome - 3Sigma Squad", layout="wide")
 
-# Load Font Awesome CSS for icons
-st.markdown("""
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-""", unsafe_allow_html=True)
-
 # Define custom CSS styles for section headers
 st.markdown("""
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <style>
     .section-header {
         background: #f8f9fa;

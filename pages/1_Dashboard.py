@@ -24,8 +24,8 @@ st.set_page_config(
 
 # Custom CSS for enhanced visual appearance
 st.markdown("""
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'>
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css'>
 <style>
     .main-header {
         background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
@@ -137,7 +137,7 @@ st.markdown("---")
 uploaded_file = st.file_uploader("Upload Excel file", type=['xlsx', 'xls', 'csv'])
 
 # Display Excel template section
-st.markdown("#### <i class="bi bi-file-earmark-spreadsheet"></i> Excel Template", unsafe_allow_html=True)
+st.markdown("#### <i class='bi bi-file-earmark-spreadsheet'></i> Excel Template", unsafe_allow_html=True)
 
 # Generate dummy data for template (3 rows of sample data)
 num_rows = 3

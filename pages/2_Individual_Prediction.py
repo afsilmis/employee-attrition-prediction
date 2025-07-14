@@ -1,6 +1,7 @@
 # ========================
 # IMPORT LIBRARIES
 # ========================
+import re
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -8,6 +9,7 @@ import joblib
 from catboost import CatBoostClassifier
 import shap
 import plotly.graph_objects as go
+from datetime import datetime
 
 # ========================
 # PAGE CONFIGURATION
@@ -17,13 +19,16 @@ st.set_page_config(
     layout="wide"
 )
 
+# Load Font Awesome for icons
+st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+""", unsafe_allow_html=True)
+
 # ========================
 # ENHANCED CUSTOM CSS STYLING
 # ========================
 st.markdown("""
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-<style>
+    <style>
     /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
@@ -617,6 +622,16 @@ ordinal_options = {
     "EnvironmentSatisfaction": [1, 2, 3, 4]
 }
 
+def beautify_feature_name(raw_name):
+    if '_' in raw_name:
+        prefix, value = raw_name.split('_', 1)
+        value = value.replace('_', ' ').title()
+        prefix = re.sub(r'([a-z])([A-Z])', r'\1 \2', prefix).title()
+        return f"{prefix}: {value}"
+    else:
+        pretty_name = re.sub(r'([a-z])([A-Z])', r'\1 \2', raw_name)
+        return pretty_name.title()
+
 # ========================
 # STREAMLIT UI COMPONENTS
 # ========================
@@ -885,29 +900,17 @@ else:
 
         top3_df = shap_df[shap_df['shap_value'] > 0].sort_values('shap_value', ascending=False).head(3)
         
-        col_gauge, div_col, col_chart = st.columns([1, 0.05, 1])
+        col_gauge, _, col_status = st.columns([1, 0.2, 1])
 
         with col_gauge:
-            # Enhanced gauge chart
             probability_percent = round(proba_resign * 100, 1)
-            
             fig_gauge = go.Figure(go.Indicator(
-                mode = "gauge+number",
-                value = probability_percent,
-                domain = {'x': [0, 1], 'y': [0, 1]},
-                title = {'text': ""},
-                number = {'font': {'size': 42, 'color': '#2d3748', 'family': 'Inter'}, 'suffix': '%'},
-                gauge = {
-                    'axis': {
-                        'range': [None, 100], 
-                        'tickwidth': 2, 
-                        'tickcolor': "#e2e8f0",
-                        'tickfont': {'size': 12, 'color': '#64748b', 'family': 'Inter'}
-                    },
+                mode="gauge+number",
+                value=probability_percent,
+                number={'font': {'size': 58, 'color': '#2d3748', 'family': 'Inter'}, 'suffix': '%'},
+                gauge={
+                    'axis': {'range': [None, 100]},
                     'bar': {'color': "#ff6b6b", 'thickness': 0.35},
-                    'bgcolor': "#f8fafc",
-                    'borderwidth': 4,
-                    'bordercolor': "#e2e8f0",
                     'steps': [
                         {'range': [0, 30], 'color': '#dcfce7'},
                         {'range': [30, 70], 'color': '#fef3c7'},
@@ -916,54 +919,52 @@ else:
                     'threshold': {
                         'line': {'color': "#dc2626", 'width': 4},
                         'thickness': 0.9,
-                        'value': 73
+                        'value': probability_percent
                     }
                 }
             ))
-            
-            fig_gauge.update_layout(
-                height=150,
-                margin=dict(l=20, r=20, t=20, b=20),
-                font={'color': "#2d3748", 'family': 'Inter'},
-                paper_bgcolor="white"
-            )
-            
+            fig_gauge.update_layout(height=180, margin=dict(l=10, r=10, t=10, b=10))
             st.plotly_chart(fig_gauge, use_container_width=True)
-            
-            # Enhanced status badge
+
+        with col_status:
+            today = datetime.today().strftime('%d %B %Y')
             st.markdown(f"""
-            <div class="probability-label">
-                <p style="font-size: 16px;">Resignation Probability</p>
-                <div class="risk-badge-high" style="margin-top: -5px;">
-                    <i class="fa-solid fa-triangle-exclamation"></i> HIGH RISK
-                </div>
+            <div style="
+                background-color:#dc2626;
+                padding: 24px;
+                border-radius: 12px;
+                text-align: center;
+                color: white;
+                height: 170px;
+                font-family: 'Inter', sans-serif;">
+                <h4 style="margin-bottom: 8px;"><i class="fa-solid fa-triangle-exclamation"></i> HIGH RISK</h4>
+                <p style="margin: 0; font-size: 16px;">Employee has a <strong>{probability_percent:.1f}%</strong> probability of resignation</p>
+                <p style="margin-top: 10px; font-size: 14px;">Last Updated: {today}</p>
             </div>
             """, unsafe_allow_html=True)
-            
-            st.markdown('</div>', unsafe_allow_html=True)
-        
-        with col_chart:
-            with st.container(border=True):
-                # Enhanced SHAP title
-                st.markdown("""
-                <h5 class="shap-title">Top Risk Factors</h5>
-                """, unsafe_allow_html=True)
-                
-                # Sort by SHAP value (descending for highest impact first)
-                top3_df = top3_df.sort_values('shap_value', ascending=False)
-                
-                # Display top 3 factors as simple text
-                for i, (_, row) in enumerate(top3_df.iterrows(), 1):
-                    st.markdown(f"""
-                    <div style="margin-left: 20px; margin-bottom: 10px;">
-                        <strong>{i}. {row['feature']}</strong>
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("""<h4 style="margin-bottom: 10px;">Top Risk Factors</h4>""", unsafe_allow_html=True)
+
+        col1, col2, col3 = st.columns(3)
+
+        top3_df = top3_df.sort_values('shap_value', ascending=False).reset_index(drop=True)
+
+        for i, col in enumerate([col1, col2, col3]):
+            if i < len(top3_df):
+                raw_feature = top3_df.loc[i, 'feature']
+                feature = beautify_feature_name(raw_feature)
+                shap_val = top3_df.loc[i, 'shap_value']
+
+                with col:
+                    col.markdown(f"""
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); text-align: center;
+                                padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; color: white;">
+                        <h5 style="font-size: 18px; margin-top: 10px; margin-bottom: 2px;">{feature}</h5>
+                        <p style="font-size: 14px;">Impact Score: <strong>{shap_val:.2f}</strong></p>
                     </div>
                     """, unsafe_allow_html=True)
 
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Enhanced divider
-        st.markdown('<hr class="divider-custom">', unsafe_allow_html=True)
 
         # Enhanced Recommendations section
         st.markdown("""<div class="prediction-container"><h3 class="results-header">Strategic Recommendations</h3></div>""",unsafe_allow_html=True)    
@@ -1015,74 +1016,45 @@ else:
         
     else:
         # Low risk scenario
-        col_gauge, col, col_message = st.columns([1, 0.05, 1.5])
+        col_gauge, col, col_message = st.columns([1, 0.2, 1.5])
 
         with col_gauge:
-            st.markdown('<div style="margin-top: 80px;"></div>', unsafe_allow_html=True)
             probability_percent = round(proba_resign * 100, 1)
-            
             fig_gauge = go.Figure(go.Indicator(
-                mode = "gauge+number",
-                value = probability_percent,
-                domain = {'x': [0, 1], 'y': [0, 1]},
-                title = {'text': ""},
-                number = {'font': {'size': 48, 'color': '#2d3748', 'family': 'Inter'}, 'suffix': '%'},
-                gauge = {
-                    'axis': {
-                        'range': [None, 100], 
-                        'tickwidth': 2, 
-                        'tickcolor': "#e2e8f0",
-                        'tickfont': {'size': 12, 'color': '#64748b', 'family': 'Inter'}
-                    },
-                    'bar': {'color': "#51cf66", 'thickness': 0.35},
-                    'bgcolor': "#f8fafc",
-                    'borderwidth': 4,
-                    'bordercolor': "#e2e8f0",
+                mode="gauge+number",
+                value=probability_percent,
+                number={'font': {'size': 58, 'color': '#2d3748', 'family': 'Inter'}, 'suffix': '%'},
+                gauge={
+                    'axis': {'range': [None, 100]},
+                    'bar': {'color': "#ff6b6b", 'thickness': 0.35},
                     'steps': [
                         {'range': [0, 30], 'color': '#dcfce7'},
                         {'range': [30, 70], 'color': '#fef3c7'},
                         {'range': [70, 100], 'color': '#fee2e2'}
                     ],
                     'threshold': {
-                        'line': {'color': "#16a34a", 'width': 4},
+                        'line': {'color': "#dc2626", 'width': 4},
                         'thickness': 0.9,
-                        'value': 30
+                        'value': probability_percent
                     }
                 }
             ))
-
-            fig_gauge.update_layout(
-                height=200,
-                margin=dict(l=20, r=20, t=20, b=20),
-                font={'color': "#2d3748", 'family': 'Inter'},
-                paper_bgcolor="white"
-            )
-
+            fig_gauge.update_layout(height=180, margin=dict(l=10, r=10, t=10, b=10))
             st.plotly_chart(fig_gauge, use_container_width=True)
 
-            st.markdown(f"""
-            <div class="probability-label">
-                <p style="font-size: 16px;">Resignation Probability</p>
-                <div class="risk-badge-low" style="margin-top: -5px;">
-                    <i class="fa-solid fa-shield"></i> LOW RISK
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            
         with col_message:
-            st.markdown("""
-            <div class="low-risk-message">
-                <div class="success-icon" style="color: #16a34a"><i class="fa-solid fa-circle-check"></i></div>
-                <h5 class="success-title">Excellent Retention Outlook</h5>
-                <p class="success-message">
-                    Employee shows strong retention potential. Continue current engagement and regular check-ins to support satisfaction and growth.
-                </p>
-                <div style="padding: 1rem; background: #f0fdf4; 
-                            border-radius: 10px; border: 1px solid #bbf7d0;">
-                    <p style="color: #16a34a; font-weight: 600; margin: 0; font-size: 14px;">
-                        <i class="fa-solid fa-lightbulb"></i> Recommendation: Conduct regular monitoring and surveys to support career development and recognition
-                    </p>
-                </div>
+            today = datetime.today().strftime('%d %B %Y')
+            st.markdown(f"""
+            <div style="
+                background-color:#4CAF50;
+                padding: 24px;
+                border-radius: 12px;
+                text-align: center;
+                color: white;
+                height: 170px;
+                font-family: 'Inter', sans-serif;">
+                <h4 style="margin-bottom: 8px;"><i class="fa-solid fa-circle-check"></i> LOW RISK</h4>
+                <p style="padding-right: 10px; padding-left: 10px; font-size: 16px;">Employee shows strong retention potential. Continue current engagement and regular check-ins to support satisfaction and growth.</p>
             </div>
             """, unsafe_allow_html=True)
         

@@ -173,7 +173,7 @@ st.download_button(
 
 # Generate and display batch prediction template
 st.markdown("---")
-st.markdown('<div class="section-header"><h3><i class="fa-regular fa-file-excel"></i> Batch Prediction: Excel Template</h3></div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="bi bi-file-earmark-excel"></i> Batch Prediction: Excel Template</h3></div>', unsafe_allow_html=True)
 st.markdown("Use this sample format to prepare your employee data for batch prediction.")
 
 num_rows = 6  

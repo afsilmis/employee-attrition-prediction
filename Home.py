@@ -224,7 +224,7 @@ with pd.ExcelWriter(output_dummy, engine='xlsxwriter') as writer:
 dummy_excel = output_dummy.getvalue()
 
 st.download_button(
-    label="Download Example Template",
+    label="Download Batch Template",
     data=dummy_excel,
     file_name='example_template.xlsx',
     mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'

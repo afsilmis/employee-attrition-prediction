@@ -255,6 +255,6 @@ with col3:
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #666;'>
-    <small>3Sigma Squad © 2024 | Last updated: {}</small>
+    <small>3Sigma Squad © 2025 | Last updated: {}</small>
 </div>
 """.format(datetime.now().strftime("%Y-%m-%d %H:%M")), unsafe_allow_html=True)

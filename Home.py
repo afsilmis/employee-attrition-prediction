@@ -173,7 +173,7 @@ st.download_button(
 
 # Generate and display batch prediction template
 st.markdown("---")
-st.markdown("### <i class='fa-solid fa-file-excel'></i> Batch Prediction: Excel Template", unsafe_allow_html=True)
+st.markdown("### <i class="fa-regular fa-file-excel"></i> Batch Prediction: Excel Template", unsafe_allow_html=True)
 
 num_rows = 6  
 dummy_data = {}

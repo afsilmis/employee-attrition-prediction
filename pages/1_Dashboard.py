@@ -134,7 +134,7 @@ st.markdown("---")
 # =============================================================================
 
 # File uploader for Excel/CSV files
-uploaded_file = st.file_uploader("Upload Excel file", type=['xlsx', 'xls', 'csv'])
+uploaded_file = st.file_uploader("Upload Excel or CSV file", type=['xlsx', 'xls', 'csv'])
 
 # Display Excel template section
 st.markdown("#### <i class='bi bi-file-earmark-spreadsheet'></i> Excel Template", unsafe_allow_html=True)

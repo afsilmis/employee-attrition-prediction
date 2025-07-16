@@ -125,7 +125,7 @@ To get started, choose a page below or use the sidebar navigation.
 # Section for showing dashboard template
 st.markdown("---")
 st.markdown('<div class="section-header"><h3><i class="bi bi-file-earmark-spreadsheet"></i> Dashboard: Excel Template</h3></div>', unsafe_allow_html=True)
-st.markdown("Use this sample format to prepare your employee data for batch prediction.")
+st.markdown("Use this sample format to prepare your employee data for dashboard.")
 
 # Generate dummy data for template
 num_rows = 3
@@ -173,7 +173,8 @@ st.download_button(
 
 # Generate and display batch prediction template
 st.markdown("---")
-st.markdown("### <i class='fa-regular fa-file-excel'></i> Batch Prediction: Excel Template", unsafe_allow_html=True)
+st.markdown('<div class="section-header"><h3><i class="fa-regular fa-file-excel"></i> Batch Prediction: Excel Template</h3></div>', unsafe_allow_html=True)
+st.markdown("Use this sample format to prepare your employee data for batch prediction.")
 
 num_rows = 6  
 dummy_data = {}

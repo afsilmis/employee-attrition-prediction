@@ -103,8 +103,8 @@ ordinal_options = {
 # Display main header and title
 st.markdown("""
 <div>
-    <h1 style="color: black; margin: 0; text-align: center;">Attrition Prediction Dashboard</h1>
-    <p style="text-align: center; font-size: 16px; color: gray;">by 3Sigma Squad</p>
+    <h1 style="color: black; margin: 0; text-align: center;">Know Who's at Risk</h1>
+    <p style="text-align: center; font-size: 16px; color: gray;">Attrition App by 3Sigma Squad</p>
 </div>
 """, unsafe_allow_html=True)
 st.markdown("---")

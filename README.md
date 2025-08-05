@@ -188,7 +188,7 @@ By applying the optimized threshold of 0.73, the model's performance was signifi
 
 Confusion Matrix with Optimal Threshold:
 
-<p align="center"><img width="700" alt="Confusion Matrix after Threshold Optimization (Threshold = 0.73)" src="https://github.com/user-attachments/assets/30fd9216-cbff-40a3-a10a-98adeef53c29"/></p>
+<p align="center"><img width="500" alt="Confusion Matrix after Threshold Optimization (Threshold = 0.73)" src="https://github.com/user-attachments/assets/30fd9216-cbff-40a3-a10a-98adeef53c29"/></p>
 
 <p align="center"><sub><i>Figure 7. Confusion Matrix after applying the optimized threshold. The model achieved zero false positives while maintaining a high true positive count</i></sub></p>
 

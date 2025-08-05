@@ -72,7 +72,7 @@ Employees across different income levels show similar attrition rates. In fact, 
 
 <img width="7000" height="2000" alt="Stacked bar chart showing employee attrition rates across income and salary hike levels" src="https://github.com/user-attachments/assets/6a354e28-335c-45d3-8df8-dc7b0d9f7190" />
 
-<p align="center"><i>Figure 1. Attrition remains consistent across income and raise levels, suggesting that pay increases alone don’t prevent turnover</i></p>
+<p align="center"><sub><i>Figure 1. Attrition remains consistent across income and raise levels, suggesting that pay increases alone don’t prevent turnover</i></sub>sub></p>
 
 #### Why is HR Leaving?
 

@@ -106,7 +106,7 @@ Job satisfaction demonstrates clear predictive power for retention outcomes. Env
 
 Age and total working years emerge as stronger predictors of attrition than compensation factors. Younger, less experienced employees represent the highest flight risk, indicating that experience level serves as a critical retention factor.
 
-<img width="7000" height="2000" alt="TotalWorkingYears stacked" src="https://github.com/user-attachments/assets/ae425a23-aba3-444a-aa55-f0b097efc159" />
+<img width="7000" height="2000" alt="Two bar charts presenting attrition percentages by age group and total working years" src="https://github.com/user-attachments/assets/ae425a23-aba3-444a-aa55-f0b097efc159" />
 
 <p align="center"><sub><i>Figure 5. Attrition rate by age and total working years</i></sub></p>
 

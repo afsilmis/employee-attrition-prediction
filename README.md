@@ -171,9 +171,10 @@ best_params = {
 
 To further refine the model's output, we performed a threshold optimization analysis to maximize the F2-Score. As illustrated in the plot below, the F2-Score remains stable and high across a range of thresholds, but it reaches its optimal value at threshold = 0.73. This threshold provides the best trade-off between minimizing false negatives and avoiding false positives, which aligns with the business requirement to prioritize recall while maintaining high precision.
 
-<img width="500" alt="Threshold vs F2-Score Curve showing optimal threshold at 0.73" src="https://github.com/user-attachments/assets/6142d07e-35e5-4c7d-a368-1052030a0e22" />
-
-<p align="center"><sub><i>Figure 6. Threshold Optimization Curve — F2-Score peaks at threshold = 0.73, offering the best balance between precision and recall</i></sub></p>
+<p align="center">
+<img width="800" alt="Threshold vs F2-Score Curve showing optimal threshold at 0.73" src="https://github.com/user-attachments/assets/6142d07e-35e5-4c7d-a368-1052030a0e22" />
+<sub><i>Figure 6. Threshold Optimization Curve — F2-Score peaks at threshold = 0.73, offering the best balance between precision and recall</i></sub>
+</p>
 
 #### Final Model Evaluation
 

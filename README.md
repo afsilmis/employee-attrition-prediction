@@ -110,6 +110,18 @@ Age and total working years emerge as stronger predictors of attrition than comp
 
 <p align="center"><sub><i>Figure 5. Attrition rate by age and total working years</i></sub></p>
 
+#### Multivariate Analysis: No Single Cause for Attrition
+
+## Correlation Analysis
+
+Below is a correlation heatmap showing the relationship between various features and employee attrition.
+
+<p align="center"><img width="700" alt="Correlation heatmap of features related to employee attrition" src="https://github.com/user-attachments/assets/86edadad-f2aa-43cb-8a56-a1d2c82c07a2" /></p>
+<p align="center"><sub><i>Figure 7. Correlation heatmap showing weak relationships between features and attrition</i></sub></p>
+
+
+The analysis shows that no single feature strongly correlates with attrition — all correlation values are below 0.2. This indicates that employee turnover is influenced by a combination of factors rather than one dominant cause.
+
 ## Model Selection and Performance
 
 #### Model Comparison
@@ -172,7 +184,7 @@ best_params = {
 To further refine the model's output, we performed a threshold optimization analysis to maximize the F2-Score. As illustrated in the plot below, the F2-Score remains stable and high across a range of thresholds, but it reaches its optimal value at threshold = 0.73. This threshold provides the best trade-off between minimizing false negatives and avoiding false positives, which aligns with the business requirement to prioritize recall while maintaining high precision.
 
 <p align="center"><img width="700" alt="Threshold vs F2-Score Curve showing optimal threshold at 0.73" src="https://github.com/user-attachments/assets/6142d07e-35e5-4c7d-a368-1052030a0e22" /></p>
-<p align="center"><sub><i>Figure 6. Threshold Optimization Curve — F2-Score peaks at threshold = 0.73, offering the best balance between precision and recall</i></sub></p>
+<p align="center"><sub><i>Figure 7. Threshold Optimization Curve — F2-Score peaks at threshold = 0.73, offering the best balance between precision and recall</i></sub></p>
 
 #### Final Model Evaluation
 
@@ -190,7 +202,7 @@ Confusion Matrix with Optimal Threshold:
 
 <p align="center"><img width="500" alt="Confusion Matrix after Threshold Optimization (Threshold = 0.73)" src="https://github.com/user-attachments/assets/30fd9216-cbff-40a3-a10a-98adeef53c29"/></p>
 
-<p align="center"><sub><i>Figure 7. Confusion Matrix after applying the optimized threshold. The model achieved zero false positives while maintaining a high true positive count</i></sub></p>
+<p align="center"><sub><i>Figure 8. Confusion Matrix after applying the optimized threshold. The model achieved zero false positives while maintaining a high true positive count</i></sub></p>
 
 - True Negatives: 555
 - True Positives: 102

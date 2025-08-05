@@ -171,7 +171,7 @@ best_params = {
 
 To further refine the model's output, we performed a threshold optimization analysis to maximize the F2-Score. As illustrated in the plot below, the F2-Score remains stable and high across a range of thresholds, but it reaches its optimal value at threshold = 0.73. This threshold provides the best trade-off between minimizing false negatives and avoiding false positives, which aligns with the business requirement to prioritize recall while maintaining high precision.
 
-<p align="center"><img width="800" alt="Threshold vs F2-Score Curve showing optimal threshold at 0.73" src="https://github.com/user-attachments/assets/6142d07e-35e5-4c7d-a368-1052030a0e22" /></p>
+<p align="center"><img width="700" alt="Threshold vs F2-Score Curve showing optimal threshold at 0.73" src="https://github.com/user-attachments/assets/6142d07e-35e5-4c7d-a368-1052030a0e22" /></p>
 <p align="center"><sub><i>Figure 6. Threshold Optimization Curve — F2-Score peaks at threshold = 0.73, offering the best balance between precision and recall</i></sub></p>
 
 #### Final Model Evaluation
@@ -188,7 +188,7 @@ By applying the optimized threshold of 0.73, the model's performance was signifi
 
 Confusion Matrix with Optimal Threshold:
 
-<img width="500" alt="Confusion Matrix after Threshold Optimization (Threshold = 0.73)" src="https://github.com/user-attachments/assets/78a075a9-d74b-4cc5-91cb-c16c07b35711" />
+<p align="center"><img width="700" alt="Confusion Matrix after Threshold Optimization (Threshold = 0.73)" src="https://github.com/user-attachments/assets/78a075a9-d74b-4cc5-91cb-c16c07b35711" /></p>
 
 <p align="center"><sub><i>Figure 7. Confusion Matrix after applying the optimized threshold. The model achieved zero false positives while maintaining a high true positive count</i></sub></p>
 

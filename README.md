@@ -115,7 +115,7 @@ Age and total working years emerge as stronger predictors of attrition than comp
 Below is a correlation heatmap showing the relationship between various features and employee attrition.
 
 <p align="center"><img width="600" alt="Correlation heatmap of features related to employee attrition" src="https://github.com/user-attachments/assets/86edadad-f2aa-43cb-8a56-a1d2c82c07a2" /></p>
-<p align="center"><sub><i>Figure 7. Correlation heatmap showing weak relationships between features and attrition</i></sub></p>
+<p align="center"><sub><i>Figure 6. Correlation heatmap showing weak relationships between features and attrition</i></sub></p>
 
 
 The analysis shows that no single feature strongly correlates with attrition — all correlation values are below 0.2. This indicates that employee turnover is influenced by a combination of factors rather than one dominant cause.

@@ -112,11 +112,9 @@ Age and total working years emerge as stronger predictors of attrition than comp
 
 #### Multivariate Analysis: No Single Cause for Attrition
 
-## Correlation Analysis
-
 Below is a correlation heatmap showing the relationship between various features and employee attrition.
 
-<p align="center"><img width="700" alt="Correlation heatmap of features related to employee attrition" src="https://github.com/user-attachments/assets/86edadad-f2aa-43cb-8a56-a1d2c82c07a2" /></p>
+<p align="center"><img width="600" alt="Correlation heatmap of features related to employee attrition" src="https://github.com/user-attachments/assets/86edadad-f2aa-43cb-8a56-a1d2c82c07a2" /></p>
 <p align="center"><sub><i>Figure 7. Correlation heatmap showing weak relationships between features and attrition</i></sub></p>
 
 

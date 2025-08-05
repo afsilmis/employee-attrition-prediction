@@ -43,29 +43,17 @@ Our objective is to reduce the annual attrition rate from 16.1% to 10% within 12
 
 The dataset includes six main feature categories:
 
-1. **Demographic & Personal**
+1. **Demographic & Personal**: Age, Gender, Marital Status, Education, Education Field, Distance from Home, Over18, NumCompaniesWorked
     
-    Age, Gender, Marital Status, Education, Education Field, Distance from Home, Over18, NumCompaniesWorked
+2. **Career Tenure & History**: TotalWorkingYears, YearsAtCompany, YearsSinceLastPromotion, YearsWithCurrManager, TrainingTimesLastYear
     
-2. **Career Tenure & History**
+3. **Satisfaction Metrics**: JobSatisfaction, EnvironmentSatisfaction, WorkLifeBalance, JobInvolvement
     
-    TotalWorkingYears, YearsAtCompany, YearsSinceLastPromotion, YearsWithCurrManager, TrainingTimesLastYear
+4. **Job & Role Information**: Department, JobRole, JobLevel, BusinessTravel, EmployeeCount, EmployeeNumber, StandardHours
     
-3. **Satisfaction Metrics**
+5. **Compensation & Benefits**: MonthlyIncome, PercentSalaryHike, PerformanceRating, StockOptionLevel
     
-    JobSatisfaction, EnvironmentSatisfaction, WorkLifeBalance, JobInvolvement
-    
-4. **Job & Role Information**
-    
-    Department, JobRole, JobLevel, BusinessTravel, EmployeeCount, EmployeeNumber, StandardHours
-    
-5. **Compensation & Benefits**
-    
-    MonthlyIncome, PercentSalaryHike, PerformanceRating, StockOptionLevel
-    
-6. **Attendance**
-    
-    in_time, out_time
+6. **Attendance**: in_time, out_time
     
 The specific variables used for the model will be: Age, Gender, Marital Status, Distance From Home, Department, Job Role, Education Field, Business Travel, Total Working Years, Years with Current Manager, Years at Company, Number of Companies Worked, Years Since Last Promotion, Training Times Last Year, Monthly Income, Percent Salary Hike, Average Work Hours per Day, Overtime Days, Work-Life Balance, Job Satisfaction, and Environment Satisfaction.
 
@@ -84,7 +72,7 @@ Employees across different income levels show similar attrition rates. In fact, 
 
 <img width="7000" height="2000" alt="Stacked bar chart showing employee attrition rates across income and salary hike levels" src="https://github.com/user-attachments/assets/6a354e28-335c-45d3-8df8-dc7b0d9f7190" />
 
-_Figure 1. Attrition remains consistent across income and raise levels, suggesting that pay increases alone don’t prevent turnover._
+<p align="center"><i>Figure 1. Attrition remains consistent across income and raise levels, suggesting that pay increases alone don’t prevent turnover</i></p>
 
 #### Why is HR Leaving?
 
@@ -92,7 +80,7 @@ Attrition is highly concentrated in HR, with a 30.2% turnover rate—double that
 
 <img width="7000" height="2000" alt="Stacked bar chart showing employee attrition rates by department and education background, with HR having the highest attrition at 30.2% overall and 40.7% among those with HR education" src="https://github.com/user-attachments/assets/eddccd68-b96d-45e3-af55-00c3f6dd7ff0" />
 
-_Figure 2. HR shows significantly higher attrition rates compared to other departments, particularly among those with an HR educational background._
+<p align="center"><i>Figure 2. HR shows significantly higher attrition rates compared to other departments, particularly among those with an HR educational background</i></p>
 
 #### Root Causes Analysis
 
@@ -104,7 +92,7 @@ Our analysis reveals a strong correlation between overtime exposure and attritio
 
 <img width="4872" height="1321" alt=" Bar charts comparing attrition (Yes/No) across overtime categories and work-life balance ratings" src="https://github.com/user-attachments/assets/d4d4c8b1-1a39-4c1f-b9d9-a599417154e8" />
 
-_Figure 3. Attrition rate by overtime status and work-life balance rating_
+<p align="center"><i>Figure 3. Attrition rate by overtime status and work-life balance rating</i></p>
 
 **2. Low Job & Environmental Satisfaction**
 
@@ -112,7 +100,7 @@ Job satisfaction demonstrates clear predictive power for retention outcomes. Env
 
 <img width="7000" height="2000" alt="Bar charts showing attrition distribution by job satisfaction and environment satisfaction scores" src="https://github.com/user-attachments/assets/e394255a-fd04-4684-bda0-e41fa317e454" />
 
-_Figure 4. Attrition rate by job satisfaction and environment satisfaction levels_
+<p align="center"><i>Figure 4. Attrition rate by job satisfaction and environment satisfaction levels</i></p>
 
 **3. Limited Experience Profile**
 
@@ -120,7 +108,7 @@ Age and total working years emerge as stronger predictors of attrition than comp
 
 <img width="7000" height="2000" alt="TotalWorkingYears stacked" src="https://github.com/user-attachments/assets/ae425a23-aba3-444a-aa55-f0b097efc159" />
 
-_Figure 5. Attrition rate by age and total working years_
+<p align="center"><i>Figure 5. Attrition rate by age and total working years</i></p>
 
 ## Model Selection and Performance
 
@@ -185,7 +173,7 @@ To further refine the model's output, we performed a threshold optimization anal
 
 <img width="5120" height="3840" alt="Threshold vs F2-Score Curve showing optimal threshold at 0.73" src="https://github.com/user-attachments/assets/6142d07e-35e5-4c7d-a368-1052030a0e22" />
 
-_Figure 6. Threshold Optimization Curve — F2-Score peaks at threshold = 0.73, offering the best balance between precision and recall._
+<p align="center"><i>Figure 6. Threshold Optimization Curve — F2-Score peaks at threshold = 0.73, offering the best balance between precision and recall</i></p>
 
 #### Final Model Evaluation
 
@@ -203,7 +191,7 @@ Confusion Matrix with Optimal Threshold:
 
 <img width="5120" height="3840" alt="Confusion Matrix after Threshold Optimization (Threshold = 0.73)" src="https://github.com/user-attachments/assets/78a075a9-d74b-4cc5-91cb-c16c07b35711" />
 
-_Figure 7. Confusion Matrix after applying the optimized threshold. The model achieved zero false positives while maintaining a high true positive count._
+<p align="center"><i>Figure 7. Confusion Matrix after applying the optimized threshold. The model achieved zero false positives while maintaining a high true positive count</i></p>
 
 - True Negatives: 555
 - True Positives: 102
